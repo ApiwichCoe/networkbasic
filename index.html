@@ -628,6 +628,140 @@ $('sc-table').innerHTML=tb;calc();
 <code>nslookup google.com</code></article>
 </div>
 
+        
+            <h3 class="sub">ARP (Address Resolution Protocol) ทีละขั้น</h3>
+            <p class="explain">ในเครือข่าย LAN การส่ง Frame ต้องใช้ <b>MAC Address</b> แต่โปรแกรมรู้แค่ <b>IP Address</b> ของปลายทาง ARP จึงทำหน้าที่ "แปลง IP เป็น MAC" ภายใน Subnet เดียวกัน (จัดอยู่คาบเกี่ยว Layer 2 และ 3) ส่วน IPv6 ใช้ NDP ทำหน้าที่นี้แทน ARP</p>
+<div class="topo"><svg viewBox="0 0 500 170" role="img">
+<rect x="10" y="62" width="90" height="42" rx="6" class="b"/><text x="55" y="80">PC A</text><text x="55" y="95">192.168.10.10</text>
+<rect x="205" y="62" width="90" height="42" rx="6" class="b"/><text x="250" y="88">Switch</text>
+<rect x="400" y="14" width="90" height="42" rx="6" class="b"/><text x="445" y="32">PC B</text><text x="445" y="47">192.168.10.20</text>
+<rect x="400" y="118" width="90" height="42" rx="6" class="b"/><text x="445" y="136">PC C</text><text x="445" y="151">192.168.10.30</text>
+<path d="M100 83H205M295 72L400 38M295 94L400 140" class="ln"/>
+<text x="152" y="62" style="fill:#3b82f6">① Request (Broadcast)</text>
+<text x="152" y="108" style="fill:#22c55e">② Reply (Unicast)</text>
+<text x="350" y="34" style="fill:#3b82f6;font-size:10px">ใครคือ .20 ?</text>
+<text x="350" y="138" style="fill:#ef4444;font-size:10px">ไม่ใช่ เงียบ</text>
+</svg></div>
+
+            <table>
+            <tr><th>ขั้น</th><th>เกิดอะไรขึ้น</th></tr>
+            <tr><td>1</td><td>เครื่องต้นทางเอา Subnet Mask มาเทียบว่าปลายทางอยู่ Subnet เดียวกันหรือไม่ ถ้าใช่ ต้องหา MAC ของปลายทางเอง ถ้าไม่ใช่ ต้องหา MAC ของ <b>Default Gateway</b> แทน</td></tr>
+            <tr><td>2</td><td>ดู ARP Cache ก่อน ถ้ามี IP นั้นอยู่แล้ว ใช้ MAC ที่จำไว้ได้เลย</td></tr>
+            <tr><td>3</td><td>ถ้าไม่มี ส่ง <b>ARP Request แบบ Broadcast</b> (MAC ปลายทาง FF:FF:FF:FF:FF:FF) ถามว่า "ใครคือ IP นี้ ช่วยบอก MAC หน่อย"</td></tr>
+            <tr><td>4</td><td>ทุกเครื่องใน VLAN เดียวกันได้รับ แต่มีเฉพาะเครื่องที่ IP ตรงกันเท่านั้นที่ตอบ เครื่องอื่นเงียบ</td></tr>
+            <tr><td>5</td><td>เครื่องที่ถูกถามส่ง <b>ARP Reply แบบ Unicast</b> กลับมา พร้อม MAC ของตัวเอง</td></tr>
+            <tr><td>6</td><td>ต้นทางจดคู่ IP ↔ MAC ลง ARP Cache แล้วส่งข้อมูลจริงต่อ ซึ่งเป็นสาเหตุที่ ping ครั้งแรกมักเสียไป 1 ครั้ง</td></tr>
+            </table>
+            <div class="note"><b>อายุของ ARP Cache:</b> Cisco เก็บ 4 ชั่วโมงเป็นค่าเริ่มต้น ส่วน Windows และ Linux เก็บสั้นกว่ามาก (ตั้งแต่หลักสิบวินาทีถึงไม่กี่นาที) เมื่อหมดอายุจะถามใหม่</div>
+
+            <h3 class="sub">ฟิลด์สำคัญใน ARP Packet</h3>
+            <table>
+            <tr><th>ฟิลด์</th><th>ความหมาย</th></tr>
+            <tr><td>Opcode</td><td>1 = Request, 2 = Reply</td></tr>
+            <tr><td>Sender MAC / Sender IP</td><td>MAC และ IP ของผู้ส่งข้อความนี้</td></tr>
+            <tr><td>Target IP</td><td>IP ที่ต้องการหา MAC</td></tr>
+            <tr><td>Target MAC</td><td>ใน Request เป็น 00:00:00:00:00:00 (ยังไม่รู้) ใน Reply เป็น MAC ของผู้ถาม</td></tr>
+            </table>
+
+            <h3 class="sub">ARP กับ Router และ Gateway</h3>
+            <p class="explain">ARP เป็น Broadcast จึง <b>ข้าม Router ไม่ได้</b> เมื่อส่งไปนอก Subnet เครื่องจะ ARP หา MAC ของ Gateway เท่านั้น แล้วส่ง Frame ไปโดยใช้ MAC ของ Gateway เป็นปลายทาง แต่ IP ปลายทางยังเป็นเครื่องจริงปลายทางเหมือนเดิม จากนั้น Router จะ ARP ต่อในฝั่งขาออกของตัวเอง ทำให้ MAC เปลี่ยนทุก Hop แต่ IP ไม่เปลี่ยน</p>
+            <p class="explain"><b>Proxy ARP:</b> Router ตอบ ARP แทนเครื่องปลายทางที่อยู่คนละ Subnet ทำให้เครื่องที่ตั้ง Mask ผิดยังคุยออกไปได้ แต่ไม่ควรพึ่งพา เพราะอาจซ่อนปัญหาการตั้งค่า</p>
+            <p class="explain"><b>Gratuitous ARP:</b> เครื่องส่ง ARP ถามหา IP ของตัวเอง เพื่อตรวจว่ามี IP ซ้ำหรือไม่ และเพื่อแจ้งให้ทุกเครื่องอัปเดต ARP Cache เมื่อ MAC ของ IP นั้นเปลี่ยน (เช่น ตอน HSRP/VRRP สลับ Router)</p>
+
+<div class="command-box"><h3>คำสั่งดู / ล้าง ARP Table</h3>
+<pre>
+# Windows
+arp -a              ดู ARP Cache
+arp -d *            ล้างทั้งหมด (ต้องเปิดแบบ Administrator)
+
+# Linux
+ip neigh show
+sudo ip neigh flush all
+
+! Cisco
+show ip arp
+clear arp-cache
+
+! Huawei
+display arp
+reset arp dynamic
+</pre></div>
+<div class="command-box"><h3>ตัวอย่างผลลัพธ์ arp -a บน Windows</h3>
+<pre>
+Interface: 192.168.10.10 --- 0x4
+  Internet Address      Physical Address      Type
+  192.168.10.1          00-1a-2b-3c-4d-5e     dynamic
+  192.168.10.255        ff-ff-ff-ff-ff-ff     static
+</pre></div>
+
+            <h3 class="sub">ปัญหาที่เกี่ยวกับ ARP</h3>
+            <table>
+            <tr><th>อาการ</th><th>สาเหตุที่พบบ่อย / วิธีตรวจ</th></tr>
+            <tr><td>ping ครั้งแรก Timeout แต่ครั้งต่อไปผ่าน</td><td>ปกติ เพราะต้องทำ ARP ก่อน</td></tr>
+            <tr><td>ARP Table ไม่มี Gateway หรือขึ้น Incomplete</td><td>ส่ง Request แล้วไม่มีใครตอบ: อยู่ผิด VLAN, สายหรือพอร์ตมีปัญหา, IP/Mask ผิด, Gateway ปิดอยู่</td></tr>
+            <tr><td>ขึ้นข้อความ IP Address Conflict</td><td>มีสองเครื่องใช้ IP เดียวกัน ใช้ <code>arp -a</code> ดู MAC ที่ตอบ แล้วตามหาเครื่องที่ซ้ำ</td></tr>
+            <tr><td>เปลี่ยนอุปกรณ์แต่ IP เดิม แล้วยังคุยไม่ได้</td><td>ARP Cache ยังจำ MAC ของอุปกรณ์เก่า ให้ล้าง Cache แล้วลองใหม่</td></tr>
+            <tr><td>MAC ของ Gateway เปลี่ยนไปมาโดยไม่มีเหตุ</td><td>อาจมี IP ซ้ำ หรือถูกโจมตีด้วย ARP Spoofing</td></tr>
+            </table>
+
+            <h3 class="sub">ARP Spoofing และการป้องกัน</h3>
+            <p class="explain">ARP ไม่มีการยืนยันตัวตน ใครก็ส่ง ARP Reply ปลอมได้ ผู้โจมตีจึงหลอกให้เครื่องอื่นเชื่อว่า MAC ของ Gateway คือเครื่องของตน เพื่อดักข้อมูล (Man-in-the-Middle) วิธีป้องกันบน Switch คือเปิด <b>DHCP Snooping</b> ให้รู้ว่า IP นี้เป็นของ MAC ไหนจริง แล้วใช้ <b>Dynamic ARP Inspection (DAI)</b> ทิ้ง ARP ที่ไม่ตรงกับตารางนั้น ควบคู่กับ Port Security</p>
+<div class="command-box"><h3>Cisco - DHCP Snooping + DAI</h3>
+<pre>
+ip dhcp snooping
+ip dhcp snooping vlan 10
+ip arp inspection vlan 10
+
+interface gigabitEthernet 0/24      ! พอร์ตที่ต่อกับ Switch/Router/DHCP Server
+ ip dhcp snooping trust
+ ip arp inspection trust
+
+show ip arp inspection
+show ip dhcp snooping binding
+</pre></div>
+            <div class="note">พอร์ตที่ต่อ PC ปล่อยเป็น Untrusted (ค่าเริ่มต้น) ส่วนพอร์ตที่ต่อกับ Switch, Router หรือ DHCP Server ให้ตั้งเป็น Trust ถ้าลืมตั้ง Trust ที่ลิงก์ขึ้นหา Router เครื่องจะ ARP หา Gateway ไม่ได้</div>
+
+        
+            <h3 class="sub">ภาพรวม: แพ็กเก็ตเดินทางอย่างไร (กดเปิดเว็บ → ได้หน้าเว็บ)</h3>
+            <p class="explain">ตัวอย่าง: PC (192.168.10.10) เปิดเว็บที่ Server 203.0.113.50 โดยต่อผ่าน Switch → Router (Gateway 192.168.10.1) → ISP → อินเทอร์เน็ต ขั้นตอนนี้รวมทุกหัวข้อที่เรียนมาเข้าด้วยกัน</p>
+            <table>
+            <tr><th>ขั้น</th><th>เกิดอะไรขึ้น</th><th>หัวข้อที่เกี่ยว</th></tr>
+            <tr><td>1</td><td>PC ถาม DNS หา IP ของชื่อเว็บ (UDP Port 53) ได้คำตอบเป็น 203.0.113.50</td><td>DNS</td></tr>
+            <tr><td>2</td><td>PC เอา Mask เทียบ พบว่า 203.0.113.50 ไม่อยู่ใน 192.168.10.0/24 จึงต้องส่งผ่าน <b>Default Gateway</b></td><td>Subnet</td></tr>
+            <tr><td>3</td><td>PC ทำ ARP หา MAC ของ Gateway (192.168.10.1) แล้วจดลง ARP Cache</td><td>ARP</td></tr>
+            <tr><td>4</td><td>PC เริ่มเปิดการเชื่อมต่อ TCP: สร้าง SYN (Src Port สุ่ม เช่น 51000 → Dst Port 443) ห่อเป็น Packet (Src IP .10 → Dst IP 203.0.113.50) แล้วห่อเป็น Frame (Dst MAC = MAC ของ Gateway)</td><td>TCP, Encapsulation</td></tr>
+            <tr><td>5</td><td>Switch จดว่า MAC ของ PC อยู่พอร์ตไหน แล้วส่ง Frame ออกพอร์ตที่ต่อ Router พอร์ตเดียว (ถ้าอยู่คนละ VLAN จะติด Tag ผ่าน Trunk)</td><td>Switching, VLAN</td></tr>
+            <tr><td>6</td><td>Router แกะ Frame (MAC ตรงกับตัวเอง) ดู IP ปลายทางใน Routing Table (เข้า Default Route ไป ISP) <b>ลด TTL ลง 1</b> แปลง Private IP เป็น Public ด้วย NAT ARP หา MAC ของ ISP แล้วห่อ Frame ใหม่ออกไป</td><td>Routing, NAT, TTL</td></tr>
+            <tr><td>7</td><td>Router ระหว่างทางทุกตัวทำซ้ำ: แกะ Frame → หา Route → ลด TTL → ห่อ Frame ใหม่ส่งต่อ</td><td>Routing, OSPF/BGP</td></tr>
+            <tr><td>8</td><td>Server ตอบ SYN-ACK กลับ โดยสลับต้นทาง/ปลายทาง NAT แปลงกลับเป็น Private IP แล้วส่งผ่าน Switch มาถึง PC ตามด้วย ACK, TLS Handshake และข้อมูลเว็บ</td><td>TCP, NAT, TLS</td></tr>
+            </table>
+            <table>
+            <tr><th>สิ่งที่อยู่ในแพ็กเก็ต</th><th>ระหว่างทางเปลี่ยนไหม</th></tr>
+            <tr><td>MAC Address</td><td><b>เปลี่ยนทุก Hop</b> (เป็นของ Hop ถัดไปเสมอ)</td></tr>
+            <tr><td>IP Address</td><td>ไม่เปลี่ยน ยกเว้นที่ Router ที่ทำ NAT</td></tr>
+            <tr><td>TTL</td><td>ลดลง 1 ทุกครั้งที่ผ่าน Router</td></tr>
+            <tr><td>Port</td><td>ไม่เปลี่ยน ยกเว้น PAT ที่อาจเปลี่ยน Source Port</td></tr>
+            </table>
+
+            <h3 class="sub">TCP ทำงานอย่างไร</h3>
+            <p class="explain">TCP สร้างการเชื่อมต่อที่เชื่อถือได้ ก่อนส่งข้อมูลต้อง <b>จับมือ 3 ทาง</b> เพื่อให้ทั้งสองฝั่งตกลงเลขลำดับเริ่มต้น (Sequence Number) ระหว่างส่ง ข้อมูลทุกก้อนมีเลขลำดับ ฝั่งรับตอบ ACK บอกว่าได้ถึงเลขไหนแล้ว ถ้าฝั่งส่งไม่ได้ ACK ภายในเวลาที่กำหนดจะส่งซ้ำ (Retransmission)</p>
+            <table>
+            <tr><th>ขั้น</th><th>ข้อความ (Flag)</th><th>ความหมาย</th></tr>
+            <tr><td>1</td><td>SYN</td><td>Client ขอเปิดการเชื่อมต่อ พร้อมเลขลำดับเริ่มต้น</td></tr>
+            <tr><td>2</td><td>SYN + ACK</td><td>Server ตอบรับ และส่งเลขลำดับของตัวเองกลับมา</td></tr>
+            <tr><td>3</td><td>ACK</td><td>Client ยืนยัน เริ่มส่งข้อมูลได้</td></tr>
+            <tr><td>ปิด</td><td>FIN → ACK → FIN → ACK</td><td>ปิดแยกทีละทิศทาง (RST = ตัดการเชื่อมต่อทันทีเมื่อผิดปกติ)</td></tr>
+            </table>
+            <div class="note"><b>Window Size:</b> ฝั่งรับบอกว่ารับค้างได้อีกเท่าไรก่อนต้องรอ ACK ใหม่ ช่วยควบคุมไม่ให้ส่งเร็วเกินที่ปลายทางรับไหว ส่วน UDP ไม่มีขั้นตอนเหล่านี้เลย จึงเร็วกว่าแต่ไม่รับประกันว่าถึง</div>
+
+            <h3 class="sub">ping และ traceroute ทำงานอย่างไร</h3>
+            <table>
+            <tr><th>เครื่องมือ</th><th>หลักการ</th></tr>
+            <tr><td>ping</td><td>ส่ง <b>ICMP Echo Request</b> (Type 8) ไปหาปลายทาง ถ้าถึงปลายทางจะตอบ <b>Echo Reply</b> (Type 0) ค่าเวลา (ms) คือเวลาไป-กลับ</td></tr>
+            <tr><td>traceroute / tracert</td><td>ส่งแพ็กเก็ตที่ TTL = 1, 2, 3, ... ไล่ไปทีละค่า Router ที่ทำให้ TTL เหลือ 0 จะทิ้งแพ็กเก็ตและตอบ <b>ICMP Time Exceeded</b> (Type 11) กลับมาบอก IP ของตัวเอง จึงเห็นเส้นทางทีละ Hop</td></tr>
+            <tr><td>Destination Unreachable</td><td>ICMP Type 3 ที่ Router ตอบเมื่อไม่มี Route หรือปลายทางเข้าไม่ถึง (ต่างจาก Timeout ที่ไม่มีใครตอบเลย)</td></tr>
+            </table>
+
         </section>
 
 
@@ -743,6 +877,32 @@ show ip dhcp binding
             <tr><td>PAT (Overload)</td><td>หลาย Private ใช้ Public IP ตัวเดียว แยกกันด้วย Port</td><td>ออฟฟิศและบ้านทั่วไป (ใช้บ่อยที่สุด)</td></tr>
             </table>
             <div class="note"><b>ศัพท์ใน Cisco:</b> Inside Local = IP ภายในจริง, Inside Global = IP ที่คนข้างนอกเห็น ตรวจด้วย <code>show ip nat translations</code> (ตัวอย่างตั้งค่าอยู่ใน Lab 06)</div>
+
+        
+            <h3 class="sub">HSRP / VRRP ทำงานอย่างไร (Gateway สำรอง)</h3>
+            <p class="explain">Router 2 ตัวสร้าง <b>Virtual IP</b> และ Virtual MAC ร่วมกัน PC ตั้ง Default Gateway เป็น Virtual IP นี้ Router ที่ Priority สูงสุด (ค่าเริ่มต้น 100) เป็น <b>Active</b> ตอบ ARP ของ Virtual IP และส่ง Hello ให้ตัวสำรอง (Standby) ทุก 3 วินาที ถ้า Standby ไม่ได้ยิน Hello เกิน Hold Time (10 วินาที) จะขึ้นเป็น Active แทน พร้อมส่ง Gratuitous ARP ให้ Switch และ PC อัปเดต โดย PC ไม่ต้องเปลี่ยนการตั้งค่าใด ๆ</p>
+<div class="command-box"><h3>Cisco - HSRP</h3>
+<pre>
+interface gigabitEthernet 0/0
+ ip address 192.168.10.2 255.255.255.0
+ standby 1 ip 192.168.10.1      ! Virtual IP (PC ใช้เป็น Gateway)
+ standby 1 priority 110
+ standby 1 preempt
+show standby brief
+</pre></div>
+
+            <h3 class="sub">SNMP, NTP และ Syslog ทำงานอย่างไร</h3>
+            <table>
+            <tr><th>โปรโตคอล</th><th>การทำงาน</th></tr>
+            <tr><td>SNMP</td><td>ระบบ Monitor (Manager) ถามค่าจากอุปกรณ์ (Agent) ด้วย GET โดยอ้างด้วยรหัส OID ที่อยู่ในฐานข้อมูล MIB ส่วน Trap คือ Agent ส่งแจ้งเหตุเองทันที เช่น พอร์ตล่ม SNMPv3 เพิ่มการยืนยันตัวตนและเข้ารหัส</td></tr>
+            <tr><td>NTP</td><td>ซิงก์เวลาเป็นชั้น Stratum: Stratum 0 คือนาฬิกาอะตอมหรือ GPS → Server Stratum 1 → 2 → 3 เรียงลงมา ยิ่งเลขน้อยยิ่งใกล้แหล่งเวลาจริง</td></tr>
+            <tr><td>Syslog</td><td>อุปกรณ์ส่งข้อความ Log พร้อมระดับความรุนแรง (Severity) ไปเก็บที่ Server กลาง</td></tr>
+            </table>
+            <table>
+            <tr><th>Severity</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th></tr>
+            <tr><td>ชื่อ</td><td>Emergency</td><td>Alert</td><td>Critical</td><td>Error</td><td>Warning</td><td>Notice</td><td>Informational</td><td>Debug</td></tr>
+            </table>
+            <div class="note">เลขน้อย = รุนแรงมาก ถ้าตั้ง <code>logging trap 4</code> จะส่ง Log ระดับ 0-4 (Warning ขึ้นไป) ไปยัง Syslog Server</div>
 
         </section>
 
@@ -909,6 +1069,35 @@ interface vlan 20
  no shutdown
 </pre></div>
 
+        
+            <h3 class="sub">STP เลือกพอร์ตที่จะปิดอย่างไร (ทีละขั้น)</h3>
+            <table>
+            <tr><th>ขั้น</th><th>เกิดอะไรขึ้น</th></tr>
+            <tr><td>1</td><td>ทุก Switch ส่ง <b>BPDU</b> (ข้อความ STP) ทุก 2 วินาที ประกาศ Bridge ID ของตัวเอง</td></tr>
+            <tr><td>2</td><td>เลือก <b>Root Bridge</b>: Bridge ID ต่ำสุดชนะ (Bridge ID = Priority + MAC โดย Priority เริ่มต้น 32768 เทียบ Priority ก่อน ถ้าเท่ากันเทียบ MAC)</td></tr>
+            <tr><td>3</td><td>Switch ที่ไม่ใช่ Root แต่ละตัวเลือก <b>Root Port</b> คือพอร์ตที่มี Path Cost รวมไปถึง Root ต่ำสุด</td></tr>
+            <tr><td>4</td><td>แต่ละลิงก์เลือก <b>Designated Port</b> ฝั่งที่ใกล้ Root กว่าเป็นฝ่ายส่งต่อข้อมูลของลิงก์นั้น</td></tr>
+            <tr><td>5</td><td>พอร์ตที่เหลือถูกตั้งเป็น <b>Blocking</b> (ไม่ส่งข้อมูล) จึงไม่เกิด Loop แต่ยังรับ BPDU ไว้ ถ้าลิงก์หลักขาดจะเปิดใช้แทน</td></tr>
+            </table>
+            <table>
+            <tr><th>ความเร็วลิงก์</th><th>Path Cost</th></tr>
+            <tr><td>10 Mbps</td><td>100</td></tr>
+            <tr><td>100 Mbps</td><td>19</td></tr>
+            <tr><td>1 Gbps</td><td>4</td></tr>
+            <tr><td>10 Gbps</td><td>2</td></tr>
+            </table>
+            <p class="explain">STP แบบเดิม (802.1D) พอร์ตต้องผ่านสถานะ Blocking → Listening → Learning → Forwarding ใช้เวลาประมาณ 30-50 วินาทีกว่าจะส่งข้อมูลได้ ส่วน <b>RSTP</b> (802.1w, Rapid-PVST+ ของ Cisco) สลับได้ภายในไม่กี่วินาที จึงเป็นตัวเลือกที่ควรใช้</p>
+<div class="command-box"><h3>เปิด Rapid-PVST และป้องกันพอร์ต PC</h3>
+<pre>
+spanning-tree mode rapid-pvst
+
+interface gigabitEthernet 0/1
+ spanning-tree portfast        ! พอร์ตต่อ PC ข้ามสถานะรอ ส่งข้อมูลได้ทันที
+ spanning-tree bpduguard enable ! ถ้ามี BPDU เข้ามา (มีคนเอา Switch มาต่อ) ปิดพอร์ตทันที
+</pre></div>
+
+            <div class="note">ใช้ PortFast กับพอร์ตที่ต่อ PC/Server/Printer เท่านั้น ห้ามใช้กับพอร์ตที่ต่อ Switch ด้วยกัน เพราะข้ามขั้นตรวจ Loop อาจทำให้เกิด Loop ได้</div>
+
         </section>
 
 
@@ -1026,6 +1215,19 @@ traceroute 192.168.20.5
 </pre></div>
 
             <div class="note">ถ้า <code>show ip route [IP]</code> ตอบว่า "Network not in table" แปลว่าไม่มี Route ไปปลายทางนั้น (และไม่มี Default Route) ให้เพิ่ม Route หรือตรวจว่า OSPF เรียนรู้ครบหรือยัง</div>
+
+        
+            <h3 class="sub">OSPF ทำงานทีละขั้น</h3>
+            <table>
+            <tr><th>ขั้น</th><th>เกิดอะไรขึ้น</th></tr>
+            <tr><td>1</td><td>แต่ละ Router เลือก <b>Router ID</b>: ค่าที่ตั้งด้วย <code>router-id</code> ก่อน ถ้าไม่ตั้งใช้ IP ของ Loopback ที่สูงสุด และถ้าไม่มีใช้ IP ของ Interface ที่สูงสุด</td></tr>
+            <tr><td>2</td><td>ส่ง <b>Hello</b> หา Multicast 224.0.0.5 ทุก 10 วินาที (Dead Timer 40 วินาที) เมื่อเห็นกันและพารามิเตอร์ตรงกัน จะเป็น Neighbor (2-Way)</td></tr>
+            <tr><td>3</td><td>บนลิงก์ Ethernet ที่มี Router หลายตัวจะเลือก <b>DR / BDR</b> (Priority สูงสุด ถ้าเท่ากันดู Router ID สูงสุด) ให้เป็นตัวกลางรับส่งข้อมูล ส่วนลิงก์ Router-to-Router สองตัวไม่มี DR</td></tr>
+            <tr><td>4</td><td>แลกเปลี่ยนสรุปฐานข้อมูล (DBD) → ขอ LSA ที่ยังไม่มี (LSR) → รับ LSA (LSU) → ตอบรับ (LSAck) จนสถานะเป็น <b>Full</b></td></tr>
+            <tr><td>5</td><td>ทุก Router ใน Area เดียวกันมีฐานข้อมูลลิงก์ (LSDB) <b>เหมือนกันทุกตัว</b> เสมือนมีแผนที่เครือข่ายชุดเดียวกัน</td></tr>
+            <tr><td>6</td><td>แต่ละ Router รันอัลกอริทึม <b>SPF (Dijkstra)</b> คำนวณเส้นทาง Cost ต่ำสุดไปทุกปลายทาง แล้วใส่ใน Routing Table (รหัส O)</td></tr>
+            <tr><td>7</td><td>เมื่อลิงก์ขึ้นหรือล่ม Router ที่เจอจะส่ง LSA ใหม่ให้ทั้ง Area แล้วทุกตัวคำนวณใหม่ (Convergence) ถ้ามี Route สำรองจะสลับใช้ได้เร็ว</td></tr>
+            </table>
 
         </section>
 
