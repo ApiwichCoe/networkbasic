@@ -1,0 +1,2040 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Network Engineer Handbook</title>
+
+    <link rel="stylesheet" href="css/style.css">
+<style>
+.explain{margin:14px 0;line-height:1.85}
+.note{margin:18px 0;padding:14px 18px;border-left:4px solid #3b82f6;background:rgba(59,130,246,.1);border-radius:8px;line-height:1.8}
+.sub{margin:32px 0 8px}
+.section table{margin-top:14px}
+.calc{margin:18px 0;padding:20px;border:1px solid rgba(127,127,127,.35);border-radius:14px;background:rgba(127,127,127,.07)}
+.calc .row{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end}
+.calc label{display:flex;flex-direction:column;gap:6px;font-size:.9rem}
+.calc input,.calc select{padding:10px 12px;border-radius:8px;border:1px solid rgba(127,127,127,.45);background:rgba(127,127,127,.12);color:inherit;font:inherit;min-width:150px}
+.calc .res{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-top:16px}
+.calc .res div{padding:10px 14px;border-radius:10px;background:rgba(59,130,246,.1);line-height:1.5;word-break:break-all}
+.calc .res small{display:block;opacity:.7}
+.calc .err{color:#ef4444;margin-top:12px}
+.gal{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin:16px 0}
+.gal figure,.topo{margin:0;padding:12px;border:1px solid rgba(127,127,127,.3);border-radius:12px;background:rgba(127,127,127,.06);text-align:center}
+.topo{margin:16px 0}
+.gal svg,.topo svg{width:100%;height:auto;color:inherit}
+.gal figcaption{font-size:.85rem;margin-top:8px;line-height:1.5}
+.gal svg text,.topo svg text{fill:currentColor;font-size:9px;text-anchor:middle}
+.topo svg text{font-size:11px}
+svg .b{fill:rgba(127,127,127,.18);stroke:currentColor;stroke-width:2}
+svg .p{fill:#3b82f6}svg .l{fill:#22c55e}svg .c{fill:#14b8a6}svg .s{fill:#f59e0b}
+svg .f{fill:rgba(239,68,68,.65)}svg .fe{fill:#e5e7eb;stroke:#888;stroke-width:1}
+svg .bt{fill:#3b82f6}svg .gr{fill:#22c55e}
+svg .ln{stroke:currentColor;stroke-width:2;fill:none}svg .dash{stroke:#ef4444;stroke-width:1.5;fill:none;stroke-dasharray:3 3}
+svg .tr{stroke:#3b82f6;stroke-width:4;fill:none}
+.pic{margin:18px 0;text-align:center}
+.pic img{max-width:100%;height:auto;border-radius:12px;border:1px solid rgba(127,127,127,.3);background:#fff}
+.pic figcaption{font-size:.88rem;margin-top:8px;line-height:1.6;opacity:.85}
+details.lab{border:1px solid rgba(127,127,127,.3);border-radius:12px;padding:12px 18px;margin:12px 0;background:rgba(127,127,127,.06)}
+details.lab summary{cursor:pointer;font-weight:700;font-size:1.05rem}
+details.lab .command-box{margin:12px 0}
+details.lab p,details.lab li{line-height:1.8}
+.calc select option{background:#fff;color:#111}
+.sidebar{overflow-y:auto}
+nav .nav-group{margin:20px 0 6px;padding:14px 14px 0;border-top:1px solid rgba(127,127,127,.25);font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;opacity:.55}
+.page-hidden{display:none !important}
+.pager{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:44px;padding-top:20px;border-top:1px solid rgba(127,127,127,.25)}
+.pager a{padding:10px 16px;border:1px solid rgba(127,127,127,.35);border-radius:10px;text-decoration:none;color:inherit}
+.pager a:hover{background:rgba(59,130,246,.15)}
+.search{position:relative}
+.search-results{position:absolute;top:calc(100% + 8px);left:0;min-width:340px;max-width:92vw;max-height:60vh;overflow:auto;z-index:50;padding:6px;border-radius:12px;border:1px solid rgba(127,127,127,.4);background:#0d1b2e;color:#e5e7eb;box-shadow:0 12px 32px rgba(0,0,0,.45)}
+.search-results[hidden]{display:none}
+.search-results .it{display:block;padding:10px 12px;border-radius:8px;cursor:pointer}
+.search-results .it:hover,.search-results .it.on{background:rgba(59,130,246,.22)}
+.search-results small{opacity:.6;margin-left:8px;font-size:.75rem}
+.search-results span{display:block;margin-top:3px;font-size:.85rem;opacity:.8;line-height:1.5}
+.search-results mark{background:rgba(250,204,21,.35);color:inherit;border-radius:3px}
+.search-results .none{padding:12px;opacity:.7}
+main h2,main h3,main summary{scroll-margin-top:90px}
+.hit{animation:hitflash 2s}
+@keyframes hitflash{from{background:rgba(250,204,21,.45)}to{background:transparent}}
+</style>
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+
+        <div class="logo">
+            <div class="logo-icon">N</div>
+
+            <div>
+                <h2>NETBOOK</h2>
+                <small>Network Engineer</small>
+            </div>
+        </div>
+
+        <nav>
+
+            <a href="#home" class="active">
+                🏠 Dashboard
+            </a>
+
+            <div class="nav-group">พื้นฐาน</div>
+
+            <a href="#basics">
+                🌐 Network Basics
+            </a>
+            <a href="#protocols">
+                📡 Protocols
+            </a>
+
+            <div class="nav-group">อุปกรณ์ &amp; การตั้งค่า</div>
+
+            <a href="#switching">
+                🔀 Switching
+            </a>
+            <a href="#routing">
+                🚦 Routing
+            </a>
+            <a href="#cisco">
+                🔵 Cisco
+            </a>
+            <a href="#huawei">
+                🟣 Huawei
+            </a>
+
+            <div class="nav-group">สาย &amp; การเชื่อมต่อ</div>
+
+            <a href="#console">
+                🔌 Console Cable
+            </a>
+            <a href="#utp">
+                🔗 สาย LAN (UTP)
+            </a>
+            <a href="#fiber">
+                🔦 Fiber Optic
+            </a>
+
+            <div class="nav-group">ปฏิบัติ &amp; แก้ปัญหา</div>
+
+            <a href="#troubleshooting">
+                🛠️ Troubleshooting
+            </a>
+            <a href="#labs">
+                🧪 Network Labs
+            </a>
+
+        </nav>
+
+    </aside>
+
+
+    <!-- Main -->
+    <main>
+
+        <!-- Header -->
+        <header class="header">
+
+            <div class="search">
+
+                🔍
+
+                <input
+                    type="text"
+                    placeholder="ค้นหา VLAN, OSPF, DHCP..."
+                >
+
+            </div>
+
+            <div class="status">
+                ● Network Knowledge Base
+            </div>
+
+        </header>
+
+
+        <!-- Hero -->
+        <section id="home" class="hero">
+
+            <div class="hero-content">
+
+                <p class="label">
+                    NETWORK ENGINEER HANDBOOK
+                </p>
+
+                <h1>
+                    คู่มือสำหรับ
+                    <span>ชาวเน็ตเวิร์ค</span>
+                </h1>
+
+                <p class="description">
+
+                    รวมความรู้ Network,
+                    Cisco, Huawei,
+                    Routing, Switching,
+                    Troubleshooting และ Lab
+                    ไว้ในที่เดียว
+
+                </p>
+
+                <a href="#basics" class="btn">
+                    เริ่มเรียนรู้ →
+                </a>
+
+            </div>
+
+        </section>
+
+
+        <!-- Categories -->
+        <section id="categories" class="section">
+
+            <p class="label">
+                KNOWLEDGE BASE
+            </p>
+
+            <h2>
+                หมวดหมู่
+            </h2>
+
+
+            <div class="cards">
+
+                <a href="#basics" class="card">
+
+                    <div class="card-icon">
+                        IP
+                    </div>
+
+                    <h3>
+                        Network Basics
+                    </h3>
+
+                    <p>
+                        OSI, TCP/IP, IPv4,
+                        Subnetting, ARP,
+                        DNS และ DHCP
+                    </p>
+
+                </a>
+
+
+                <a href="#switching" class="card">
+
+                    <div class="card-icon">
+                        SW
+                    </div>
+
+                    <h3>
+                        Switching
+                    </h3>
+
+                    <p>
+                        VLAN, Trunk,
+                        STP และ
+                        Inter-VLAN
+                    </p>
+
+                </a>
+
+
+                <a href="#routing" class="card">
+
+                    <div class="card-icon">
+                        RT
+                    </div>
+
+                    <h3>
+                        Routing
+                    </h3>
+
+                    <p>
+                        Static Route,
+                        Default Route,
+                        OSPF และ Routing Table
+                    </p>
+
+                </a>
+
+
+                <a href="#cisco" class="card">
+
+                    <div class="card-icon">
+                        C
+                    </div>
+
+                    <h3>
+                        Cisco
+                    </h3>
+
+                    <p>
+                        Cisco IOS
+                        Configuration และ
+                        Commands
+                    </p>
+
+                </a>
+
+
+                <a href="#huawei" class="card">
+
+                    <div class="card-icon">
+                        H
+                    </div>
+
+                    <h3>
+                        Huawei
+                    </h3>
+
+                    <p>
+                        Huawei VRP,
+                        VLAN, Routing
+                        และ OSPF
+                    </p>
+
+                </a>
+
+
+                <a href="#troubleshooting" class="card">
+
+                    <div class="card-icon">
+                        TS
+                    </div>
+
+                    <h3>
+                        Troubleshooting
+                    </h3>
+
+                    <p>
+                        วิเคราะห์ปัญหา
+                        Network แบบเป็นขั้นตอน
+                    </p>
+
+                </a>
+
+            
+                <a href="#fiber" class="card">
+                    <div class="card-icon">FO</div>
+                    <h3>Fiber Optic</h3>
+                    <p>Single-mode, Multi-mode, หัวต่อ LC/SC/MPO และ SFP</p>
+                </a>
+
+            
+                <a href="#protocols" class="card">
+                    <div class="card-icon">PR</div>
+                    <h3>Protocols</h3>
+                    <p>HTTP, SSH, SNMP, NTP, STP, HSRP, OSPF, BGP และ Port ที่ควรรู้</p>
+                </a>
+
+                <a href="#console" class="card">
+                    <div class="card-icon">CO</div>
+                    <h3>Console Cable</h3>
+                    <p>ชนิดสาย Console, การตั้งค่า 9600 8N1 และแก้ปัญหาเข้าไม่ได้</p>
+                </a>
+
+            
+                <a href="#utp" class="card">
+                    <div class="card-icon">LAN</div>
+                    <h3>สาย LAN (UTP)</h3>
+                    <p>Cat5, 5e, 6, 6a, 7, 8 ความเร็ว ระยะ และการเข้าหัว RJ45</p>
+                </a>
+
+            </div>
+
+        </section>
+
+
+        <!-- Network Basics -->
+        <section id="basics" class="section">
+
+            <p class="label">
+                01 / NETWORK BASICS
+            </p>
+
+            <h2>
+                Network Basics
+            </h2>
+
+
+            <div class="topics">
+
+                <article>
+
+                    <h3>
+                        IPv4
+                    </h3>
+
+                    <p>
+                        IPv4 เป็น Address
+                        ขนาด 32-bit
+                    </p>
+
+                    <code>
+                        192.168.10.10/24
+                    </code>
+
+                </article>
+
+
+                <article>
+
+                    <h3>
+                        DHCP
+                    </h3>
+
+                    <p>
+                        ระบบแจก IP Address
+                        ให้กับ Client
+                    </p>
+
+                    <code>
+                        Discover → Offer
+                        → Request → ACK
+                    </code>
+
+                </article>
+
+
+                <article>
+
+                    <h3>
+                        DNS
+                    </h3>
+
+                    <p>
+                        แปลง Domain Name
+                        ให้เป็น IP Address
+                    </p>
+
+                    <code>
+                        google.com → IP
+                    </code>
+
+                </article>
+
+
+                <article>
+
+                    <h3>
+                        OSI Model
+                    </h3>
+
+                    <p>
+                        โมเดล 7 Layers
+                        สำหรับการสื่อสาร Network
+                    </p>
+
+                    <code>
+                        L7 → L1
+                    </code>
+
+                </article>
+
+            </div>
+
+        
+<h3 class="sub">อุปกรณ์เครือข่ายหน้าตาเป็นอย่างไร</h3>
+<p class="explain">ภาพด้านล่างเป็นภาพวาดจำลองแบบง่าย เพื่อให้จำลักษณะเด่นของอุปกรณ์แต่ละประเภท รุ่นจริงจะมีรูปร่างและจำนวนพอร์ตต่างกัน</p>
+<div class="gal">
+<figure><svg viewBox="0 0 160 90" role="img"><rect x="8" y="30" width="144" height="32" rx="3" class="b"/><rect x="16" y="40" width="10" height="9" rx="0" class="p"/><circle cx="21" cy="55" r="1.8" class="l"/><rect x="29" y="40" width="10" height="9" rx="0" class="p"/><circle cx="34" cy="55" r="1.8" class="l"/><rect x="42" y="40" width="10" height="9" rx="0" class="p"/><circle cx="47" cy="55" r="1.8" class="l"/><rect x="55" y="40" width="10" height="9" rx="0" class="p"/><circle cx="60" cy="55" r="1.8" class="l"/><rect x="68" y="40" width="10" height="9" rx="0" class="p"/><circle cx="73" cy="55" r="1.8" class="l"/><rect x="81" y="40" width="10" height="9" rx="0" class="p"/><circle cx="86" cy="55" r="1.8" class="l"/><rect x="94" y="40" width="10" height="9" rx="0" class="p"/><circle cx="99" cy="55" r="1.8" class="l"/><rect x="107" y="40" width="10" height="9" rx="0" class="p"/><circle cx="112" cy="55" r="1.8" class="l"/><rect x="122" y="40" width="8" height="9" rx="0" class="s"/><rect x="134" y="40" width="8" height="9" rx="0" class="s"/></svg><figcaption><b>Switch</b><br>พอร์ต RJ45 เรียงเป็นแถว (น้ำเงิน) มี LED บอก Link และช่อง SFP (ส้ม) สำหรับไฟเบอร์ ใช้เชื่อมเครื่องใน LAN เดียวกัน</figcaption></figure><figure><svg viewBox="0 0 160 90" role="img"><rect x="8" y="32" width="144" height="28" rx="3" class="b"/><rect x="16" y="42" width="11" height="9" rx="0" class="p"/><rect x="30" y="42" width="11" height="9" rx="0" class="p"/><rect x="44" y="42" width="11" height="9" rx="0" class="p"/><rect x="58" y="42" width="11" height="9" rx="0" class="p"/><rect x="78" y="42" width="9" height="9" rx="0" class="c"/><circle cx="140" cy="46" r="2.5" class="l"/><path d="M30 32V16M130 32V16" class="ln"/><circle cx="30" cy="15" r="3" class="p"/><circle cx="130" cy="15" r="3" class="p"/></svg><figcaption><b>Router</b><br>พอร์ตน้อยกว่า Switch มีพอร์ต Console (เขียวอมฟ้า) ไว้ต่อสายตั้งค่า บางรุ่นมีเสา Wi-Fi ใช้เชื่อมต่างเครือข่าย</figcaption></figure><figure><svg viewBox="0 0 160 90" role="img"><rect x="8" y="24" width="144" height="42" rx="3" class="b"/><rect x="14" y="30" width="18" height="8" rx="0" class="f"/><rect x="34" y="30" width="18" height="8" rx="0" class="f"/><rect x="54" y="30" width="18" height="8" rx="0" class="f"/><rect x="74" y="30" width="18" height="8" rx="0" class="f"/><rect x="24" y="40" width="18" height="8" rx="0" class="f"/><rect x="44" y="40" width="18" height="8" rx="0" class="f"/><rect x="64" y="40" width="18" height="8" rx="0" class="f"/><rect x="14" y="50" width="18" height="8" rx="0" class="f"/><rect x="34" y="50" width="18" height="8" rx="0" class="f"/><rect x="54" y="50" width="18" height="8" rx="0" class="f"/><rect x="74" y="50" width="18" height="8" rx="0" class="f"/><rect x="108" y="40" width="10" height="9" rx="0" class="p"/><rect x="121" y="40" width="10" height="9" rx="0" class="p"/><rect x="134" y="40" width="10" height="9" rx="0" class="p"/></svg><figcaption><b>Firewall</b><br>มักมีสัญลักษณ์กำแพงอิฐ ตั้งกฎอนุญาตหรือบล็อกทราฟฟิก วางระหว่างเครือข่ายภายในกับอินเทอร์เน็ต</figcaption></figure><figure><svg viewBox="0 0 160 90" role="img"><ellipse cx="80" cy="64" rx="38" ry="11" class="b"/><circle cx="80" cy="66" r="2.5" class="l"/><path d="M68 48Q80 38 92 48M60 40Q80 24 100 40M52 32Q80 10 108 32" class="ln"/><circle cx="80" cy="54" r="2.5" class="p"/></svg><figcaption><b>Access Point</b><br>ทรงจานติดเพดาน ปล่อยสัญญาณ Wi-Fi ต่อสาย LAN กลับเข้า Switch มักจ่ายไฟผ่าน PoE</figcaption></figure><figure><svg viewBox="0 0 160 90" role="img"><rect x="30" y="8" width="100" height="76" rx="3" class="b"/><rect x="36" y="14" width="88" height="19" rx="2" class="b"/><rect x="42" y="18" width="10" height="10" rx="0" class="p"/><rect x="56" y="18" width="10" height="10" rx="0" class="p"/><rect x="70" y="18" width="10" height="10" rx="0" class="p"/><rect x="84" y="18" width="10" height="10" rx="0" class="p"/><circle cx="112" cy="23.5" r="2.5" class="l"/><rect x="36" y="38" width="88" height="19" rx="2" class="b"/><rect x="42" y="42" width="10" height="10" rx="0" class="p"/><rect x="56" y="42" width="10" height="10" rx="0" class="p"/><rect x="70" y="42" width="10" height="10" rx="0" class="p"/><rect x="84" y="42" width="10" height="10" rx="0" class="p"/><circle cx="112" cy="47.5" r="2.5" class="l"/><rect x="36" y="62" width="88" height="19" rx="2" class="b"/><rect x="42" y="66" width="10" height="10" rx="0" class="p"/><rect x="56" y="66" width="10" height="10" rx="0" class="p"/><rect x="70" y="66" width="10" height="10" rx="0" class="p"/><rect x="84" y="66" width="10" height="10" rx="0" class="p"/><circle cx="112" cy="71.5" r="2.5" class="l"/></svg><figcaption><b>Server (Rack)</b><br>กล่องแบนติดตั้งในตู้ Rack ด้านหน้าเป็นช่อง Hard Disk ด้านหลังเป็นพอร์ตเครือข่าย</figcaption></figure>
+</div>
+
+<h3 class="sub">OSI Model 7 Layers</h3>
+<p class="explain">OSI แบ่งการสื่อสารเป็น 7 ชั้น เพื่อให้รู้ว่าปัญหาเกิดที่ชั้นไหน เวลาส่งข้อมูลจะถูกห่อทีละชั้น (Encapsulation) และแกะออกตอนรับ การ Troubleshoot มักไล่จาก Layer 1 ขึ้นไป</p>
+<table>
+<tr><th>Layer</th><th>หน้าที่</th><th>ตัวอย่าง</th></tr>
+<tr><td>7 Application</td><td>บริการที่ผู้ใช้เรียกใช้</td><td>HTTP, DNS, DHCP</td></tr>
+<tr><td>6 Presentation</td><td>แปลงรูปแบบ / เข้ารหัสข้อมูล</td><td>TLS, JPEG</td></tr>
+<tr><td>5 Session</td><td>เปิด-ปิดการเชื่อมต่อ</td><td>RPC, NetBIOS</td></tr>
+<tr><td>4 Transport</td><td>ส่งข้อมูลระหว่างโปรแกรมด้วย Port</td><td>TCP, UDP</td></tr>
+<tr><td>3 Network</td><td>หาเส้นทางข้ามเครือข่ายด้วย IP</td><td>Router, IP</td></tr>
+<tr><td>2 Data Link</td><td>ส่งภายใน LAN ด้วย MAC Address</td><td>Switch, VLAN</td></tr>
+<tr><td>1 Physical</td><td>ส่งสัญญาณไฟฟ้า / แสง</td><td>สาย LAN, Fiber</td></tr>
+</table>
+
+<h3 class="sub">อธิบาย OSI ทีละชั้น</h3>
+<div class="topics">
+<article><h3>Layer 7 - Application</h3><p>จุดที่ผู้ใช้และโปรแกรมเรียกใช้เครือข่าย <b>ไม่ใช่ตัวโปรแกรมเอง</b> (เช่น Chrome) แต่คือโปรโตคอลที่โปรแกรมใช้ เช่น HTTP, DNS, DHCP, SMTP ข้อมูลที่ชั้นนี้เรียกว่า Data ปัญหาที่พบ: เข้าเว็บด้วยชื่อไม่ได้ (DNS), เว็บตอบ Error</p><code>HTTP, DNS, DHCP, SMTP</code></article>
+<article><h3>Layer 6 - Presentation</h3><p>แปลงรูปแบบข้อมูลให้ทั้งสองฝั่งเข้าใจตรงกัน เช่น เข้ารหัส (TLS/SSL), บีบอัด, แปลงรหัสตัวอักษร (ASCII, Unicode) และรูปแบบไฟล์ภาพ (JPEG, PNG)</p><code>TLS, JPEG, Unicode</code></article>
+<article><h3>Layer 5 - Session</h3><p>เปิด รักษา และปิด "เซสชัน" การคุยกันระหว่างสองโปรแกรม เช่น การ Login เข้าระบบหรือการเชื่อมต่อฐานข้อมูล ในโมเดล TCP/IP ชั้น 5-7 ถูกรวมเป็น Application ชั้นเดียว จึงมักไม่แยกพิจารณา</p><code>RPC, NetBIOS, SQL Session</code></article>
+<article><h3>Layer 4 - Transport</h3><p>ส่งข้อมูลระหว่าง <b>โปรแกรมกับโปรแกรม</b> โดยใช้ Port ระบุปลายทาง TCP จับมือ 3 ทางก่อนส่ง, ใส่เลขลำดับ, รอ ACK และส่งซ้ำถ้าหาย ส่วน UDP ส่งไปเลยไม่รอยืนยัน ข้อมูลชั้นนี้เรียก Segment (TCP) / Datagram (UDP)</p><code>SYN → SYN-ACK → ACK</code></article>
+<article><h3>Layer 3 - Network</h3><p>ระบุที่อยู่ด้วย IP และหาเส้นทางข้ามเครือข่ายด้วย Router ข้อมูลเรียก Packet มีค่า <b>TTL</b> ที่ลดลง 1 ทุกครั้งที่ผ่าน Router เมื่อเหลือ 0 จะถูกทิ้ง เพื่อไม่ให้แพ็กเก็ตวนไม่รู้จบ (traceroute ใช้หลักการนี้)</p><code>IP, ICMP, OSPF</code></article>
+<article><h3>Layer 2 - Data Link</h3><p>ส่งข้อมูลภายใน LAN ด้วย <b>MAC Address</b> (48 bit เขียนเป็นเลขฐาน 16 จำนวน 12 หลัก) ข้อมูลเรียก Frame มี FCS ท้ายเฟรมไว้ตรวจว่าข้อมูลเสียหายหรือไม่ Switch จะเรียนรู้ว่า MAC ไหนอยู่พอร์ตไหนเก็บไว้ใน MAC Address Table VLAN (802.1Q) ทำงานที่ชั้นนี้</p><code>Ethernet, ARP, VLAN, STP</code></article>
+<article><h3>Layer 1 - Physical</h3><p>ส่ง <b>Bit</b> ในรูปสัญญาณไฟฟ้า แสง หรือคลื่นวิทยุ ครอบคลุมสาย ขั้วต่อ ความเร็ว (10/100/1000) และ Duplex ปัญหาที่พบ: สายหลุด/ผิดชนิด, Duplex Mismatch (ฝั่งหนึ่ง Full อีกฝั่ง Half ทำให้ช้าและมี Error)</p><code>UTP, Fiber, Hub</code></article>
+</div>
+<div class="note"><b>เมื่อ Troubleshoot:</b> ถ้า ping ได้แต่เปิดเว็บไม่ได้ ปัญหามักอยู่ Layer 4-7 (Port ถูกบล็อกหรือ DNS) ถ้า ping IP ในเครือข่ายเดียวกันยังไม่ได้ ให้ตรวจ Layer 1-2 ก่อน (สาย, VLAN, MAC)</div>
+
+<h3 class="sub">TCP/IP Model (4 ชั้น) เทียบกับ OSI</h3>
+<p class="explain">OSI เป็นโมเดลอ้างอิงที่ใช้เรียนรู้และไล่ปัญหา ส่วน <b>TCP/IP</b> คือโมเดลที่อินเทอร์เน็ตใช้งานจริง มี 4 ชั้น (บางตำราแยก Network Access เป็น Data Link กับ Physical จึงเป็น 5 ชั้น) แต่ละชั้นของ TCP/IP คือการรวมหลายชั้นของ OSI เข้าด้วยกัน</p>
+<table>
+<tr><th>TCP/IP</th><th>OSI</th><th>ชื่อข้อมูล (PDU)</th><th>โปรโตคอล</th><th>อุปกรณ์</th></tr>
+<tr><td>Application</td><td>7, 6, 5</td><td>Data</td><td>HTTP, HTTPS, DNS, DHCP, SSH, FTP</td><td>Proxy, Firewall (L7)</td></tr>
+<tr><td>Transport</td><td>4</td><td>Segment (TCP) / Datagram (UDP)</td><td>TCP, UDP</td><td>Firewall (ตาม Port)</td></tr>
+<tr><td>Internet</td><td>3</td><td>Packet</td><td>IP, ICMP, OSPF</td><td>Router, L3 Switch</td></tr>
+<tr><td>Network Access</td><td>2, 1</td><td>Frame / Bit</td><td>Ethernet, Wi-Fi, ARP*</td><td>Switch, NIC, Access Point, สาย</td></tr>
+</table>
+<div class="note">*ARP คาบเกี่ยวระหว่าง Layer 2 กับ 3 (ใช้หา MAC จาก IP) ตำราแต่ละเล่มจัดไว้ชั้นต่างกัน ไม่ต้องกังวลถ้าเจอไม่เหมือนกัน</div>
+
+<figure class="pic">
+<img src="osi-tcpip-model.png" alt="เปรียบเทียบ OSI Model กับ TCP/IP Stack พร้อมโปรโตคอล Address อุปกรณ์ และ Encapsulation" loading="lazy">
+<figcaption>ภาพรวม OSI เทียบ TCP/IP: แต่ละชั้นใช้โปรโตคอล ที่อยู่ (Port / IP / MAC) และอุปกรณ์อะไร พร้อมแสดงการห่อข้อมูล (Encapsulation) จาก Data → Segment → Packet → Frame → Bit (ภาพมีลายน้ำของเจ้าของภาพ หากนำไปเผยแพร่ควรขออนุญาตหรืออ้างอิงที่มา)</figcaption>
+</figure>
+<div class="note"><b>อ่านจากภาพ:</b> Layer 2 (Data Link) ส่งข้อมูลได้เฉพาะภายใน Subnet เดียวกันและ <b>ข้าม Router ไม่ได้</b> ส่วน Layer 3 (IP) ส่งข้ามเครือข่ายผ่าน Router ได้ ตามคอลัมน์ Address: Layer 4 ใช้ Port, Layer 3 ใช้ IP Address, Layer 2 ใช้ MAC Address (Ethernet) หรือ DLCI (Frame Relay)</div>
+
+<h3 class="sub">Encapsulation: ข้อมูลถูกห่อทีละชั้น</h3>
+<p class="explain">ฝั่งส่งจะเติม Header ของแต่ละชั้นเข้าไปทีละชั้นจากบนลงล่าง ฝั่งรับจะแกะออกจากล่างขึ้นบน (De-encapsulation)</p>
+<div class="command-box"><h3>ลำดับการห่อข้อมูล</h3>
+<pre>
+Data
+  → + TCP Header (Port ต้นทาง/ปลายทาง)    = Segment
+  → + IP Header  (IP ต้นทาง/ปลายทาง)      = Packet
+  → + Ethernet Header (MAC ต้นทาง/ปลายทาง) = Frame
+  → แปลงเป็นสัญญาณไฟฟ้า / แสง             = Bits
+</pre></div>
+<div class="note"><b>จุดที่ควรจำ:</b> ระหว่างทางที่ผ่าน Router <b>IP ต้นทาง/ปลายทางไม่เปลี่ยน</b> แต่ <b>MAC จะถูกเปลี่ยนทุก Hop</b> (MAC ปลายทางคือ Hop ถัดไป ไม่ใช่เครื่องปลายทางจริง) เพราะ MAC ใช้ได้เฉพาะใน LAN เดียวกัน</div>
+
+<h3 class="sub">ตัวอย่าง: เปิดเว็บหนึ่งครั้งผ่านอะไรบ้าง</h3>
+<table>
+<tr><th>ชั้น</th><th>เกิดอะไรขึ้น</th></tr>
+<tr><td>7 Application</td><td>เบราว์เซอร์ถาม DNS หา IP ของเว็บ แล้วสร้างคำขอ HTTPS</td></tr>
+<tr><td>4 Transport</td><td>เปิดการเชื่อมต่อ TCP ไปยัง Port 443 (จับมือ 3 ทาง)</td></tr>
+<tr><td>3 Network</td><td>ใส่ IP ต้นทางและปลายทาง แล้วส่งให้ Default Gateway</td></tr>
+<tr><td>2 Data Link</td><td>ใช้ ARP หา MAC ของ Gateway แล้วห่อเป็น Frame</td></tr>
+<tr><td>1 Physical</td><td>ส่งเป็นสัญญาณผ่านสาย LAN, Wi-Fi หรือไฟเบอร์</td></tr>
+</table>
+
+<h3 class="sub">ใช้ OSI ไล่ปัญหา และท่องจำ</h3>
+<table>
+<tr><th>ชั้น</th><th>อาการที่พบ</th><th>ตรวจด้วย</th></tr>
+<tr><td>L1</td><td>Link down, ไฟไม่ติด</td><td>ดูสาย, show ip interface brief</td></tr>
+<tr><td>L2</td><td>อยู่ผิด VLAN, MAC ไม่เจอ</td><td>show vlan brief, show mac address-table</td></tr>
+<tr><td>L3</td><td>IP ผิด, ไม่มี Route</td><td>ipconfig, ping, show ip route</td></tr>
+<tr><td>L4</td><td>ping ได้ แต่ต่อบริการไม่ได้ (Port ถูกบล็อก)</td><td>telnet [IP] [port], ตรวจ ACL/Firewall</td></tr>
+<tr><td>L7</td><td>ping IP ได้ แต่เข้าชื่อเว็บไม่ได้ หรือแอปผิดพลาด</td><td>nslookup, ตรวจ Log ของแอป</td></tr>
+</table>
+<p class="explain"><b>ตัวช่วยจำ:</b> จาก L7 → L1 = <i>All People Seem To Need Data Processing</i> (Application, Presentation, Session, Transport, Network, Data Link, Physical) และ L1 → L7 = <i>Please Do Not Throw Sausage Pizza Away</i></p>
+
+<h3 class="sub">IPv4 และ Subnet Mask</h3>
+<p class="explain">IPv4 มี 4 ชุด (octet) ชุดละ 8 bit รวม 32 bit Subnet Mask บอกว่า bit ส่วนไหนคือ Network และส่วนไหนคือ Host เช่น /24 หมายถึง 24 bit แรกเป็น Network (255.255.255.0) อุปกรณ์ที่อยู่ Network เดียวกันคุยกันได้โดยตรง ต่าง Network ต้องผ่าน Router</p>
+<table>
+<tr><th>Prefix</th><th>Subnet Mask</th><th>Host ใช้งานได้</th></tr>
+<tr><td>/24</td><td>255.255.255.0</td><td>254</td></tr>
+<tr><td>/25</td><td>255.255.255.128</td><td>126</td></tr>
+<tr><td>/26</td><td>255.255.255.192</td><td>62</td></tr>
+<tr><td>/27</td><td>255.255.255.224</td><td>30</td></tr>
+<tr><td>/28</td><td>255.255.255.240</td><td>14</td></tr>
+<tr><td>/30</td><td>255.255.255.252</td><td>2 (ใช้กับลิงก์ Router ↔ Router)</td></tr>
+</table>
+<div class="note"><b>สูตร:</b> จำนวน Host = 2<sup>n</sup> − 2 (n = จำนวน bit ฝั่ง Host, ลบ Network Address และ Broadcast Address ออก)<br>
+<b>ตัวอย่าง 192.168.10.70/26:</b> Block size = 64 → Network = 192.168.10.64, Broadcast = 192.168.10.127, Host ใช้ได้ .65 – .126<br>
+<b>Private IP:</b> 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16 (ใช้ภายในองค์กร ออกอินเทอร์เน็ตต้องผ่าน NAT)</div>
+
+<h3 class="sub">🧮 เครื่องคิดเลข Subnet</h3>
+<p class="explain">กรอก IP แล้วเลือก CIDR (หรือกรอก Subnet Mask) ผลลัพธ์จะคำนวณให้ทันที ตัวอย่าง: 192.168.10.70 /26</p>
+<div class="calc">
+<div class="row">
+<label>IP Address<input id="sc-ip" value="192.168.10.70" inputmode="decimal" placeholder="192.168.10.70"></label>
+<label>CIDR<select id="sc-cidr"></select></label>
+<label>Subnet Mask<input id="sc-mask" placeholder="255.255.255.192"></label>
+</div>
+<div id="sc-err" class="err"></div>
+<div id="sc-res" class="res"></div>
+<div class="row" style="margin-top:22px">
+<label>ต้องการ Host กี่เครื่อง?<input id="sc-need" type="number" min="1" placeholder="เช่น 50"></label>
+</div>
+<div id="sc-need-res" class="res"></div>
+</div>
+
+<h3 class="sub">ตารางจำ CIDR</h3>
+<p class="explain"><b>เทคนิคจำเร็ว:</b> ใน Octet ที่มีการแบ่ง Subnet ค่า Mask ของ octet นั้นมีแค่ 8 ค่า และ <b>Block Size = 256 − ค่า Mask ใน octet นั้น</b> เช่น /26 → octet ที่ 4 = 192 → Block Size = 64 (Subnet จะเริ่มที่ 0, 64, 128, 192)</p>
+<table>
+<tr><th>จำนวน bit ที่เปิดใน octet</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th></tr>
+<tr><td>ค่า Mask</td><td>128</td><td>192</td><td>224</td><td>240</td><td>248</td><td>252</td><td>254</td><td>255</td></tr>
+<tr><td>Block Size</td><td>128</td><td>64</td><td>32</td><td>16</td><td>8</td><td>4</td><td>2</td><td>1</td></tr>
+</table>
+<table>
+<thead><tr><th>CIDR</th><th>Subnet Mask</th><th>Wildcard</th><th>จำนวน IP ทั้งหมด</th><th>Host ใช้งานได้</th></tr></thead>
+<tbody id="sc-table"></tbody>
+</table>
+<div class="note">แถวที่เป็นตัวหนาคือค่าที่พบบ่อยในงานจริง: /8, /16, /24 (Class A/B/C), /30 (ลิงก์ Router ↔ Router), /32 (Host เดียว, Loopback)</div>
+<script>
+(function(){
+var $=function(i){return document.getElementById(i)};
+function ip2int(s){var p=s.trim().split('.');if(p.length!==4)return null;var n=0;for(var i=0;i<4;i++){if(!/^\d{1,3}$/.test(p[i])||+p[i]>255)return null;n=n*256+ +p[i]}return n}
+function int2ip(n){return [n>>>24,(n>>>16)&255,(n>>>8)&255,n&255].join('.')}
+function mk(c){return c===0?0:(0xFFFFFFFF<<(32-c))>>>0}
+function bin(n){return [n>>>24,(n>>>16)&255,(n>>>8)&255,n&255].map(function(x){return ('00000000'+x.toString(2)).slice(-8)}).join('.')}
+function usable(c){return c===32?1:c===31?2:Math.pow(2,32-c)-2}
+function fmt(n){return n.toLocaleString('en-US')}
+function kind(ip){var a=ip>>>24,b=(ip>>>16)&255;
+ var cls=a<128?'A':a<192?'B':a<224?'C':a<240?'D (Multicast)':'E (Reserved)';
+ var ty='Public';
+ if(a===10||(a===172&&b>=16&&b<=31)||(a===192&&b===168))ty='Private';
+ else if(a===127)ty='Loopback';else if(a===169&&b===254)ty='Link-local (APIPA)';
+ return 'Class '+cls+' / '+ty}
+function box(k,v){return '<div><small>'+k+'</small>'+v+'</div>'}
+var sel=$('sc-cidr');for(var i=0;i<=32;i++){var o=document.createElement('option');o.value=i;o.textContent='/'+i;sel.appendChild(o)}
+sel.value=26;
+function calc(){
+ var ip=ip2int($('sc-ip').value),c=+sel.value,err=$('sc-err'),res=$('sc-res');
+ if(ip===null){err.textContent='IP ไม่ถูกต้อง (ตัวอย่าง 192.168.10.70)';res.innerHTML='';return}
+ err.textContent='';
+ var m=mk(c),net=(ip&m)>>>0,wc=(~m)>>>0,bc=(net|wc)>>>0;
+ var first=c>=31?net:net+1,last=c>=31?bc:bc-1;
+ $('sc-mask').value=int2ip(m);
+ res.innerHTML=box('Network Address',int2ip(net)+'/'+c)+box('Subnet Mask',int2ip(m)+'<small>'+bin(m)+'</small>')+box('Wildcard Mask',int2ip(wc))+box('Broadcast Address',c>=31?'-':int2ip(bc))+box('Host แรก - สุดท้าย',int2ip(first)+' - '+int2ip(last))+box('Host ใช้งานได้',fmt(usable(c))+' <small>จากทั้งหมด '+fmt(Math.pow(2,32-c))+' IP</small>')+box('Block Size (octet ที่แบ่ง)',(c%8===0?256:Math.pow(2,8-(c%8)))+'')+box('ชนิดของ IP',kind(ip));
+}
+function fromMask(){
+ var m=ip2int($('sc-mask').value),err=$('sc-err');
+ if(m===null){err.textContent='Subnet Mask ไม่ถูกต้อง';return}
+ var inv=(~m)>>>0;
+ if((inv&((inv+1)>>>0))!==0&&inv!==0xFFFFFFFF){err.textContent='Subnet Mask ต้องเป็น bit 1 ต่อเนื่อง เช่น 255.255.255.192';return}
+ sel.value=m===0?0:m.toString(2).replace(/0/g,'').length;calc();
+}
+function need(){
+ var n=+$('sc-need').value,r=$('sc-need-res');
+ if(!n||n<1){r.innerHTML='';return}
+ for(var c=30;c>=0;c--){if(usable(c)>=n){r.innerHTML=box('ควรใช้','/'+c)+box('Subnet Mask',int2ip(mk(c)))+box('Host ใช้งานได้',fmt(usable(c)))+box('ที่เหลือว่าง',fmt(usable(c)-n)+' เครื่อง');return}}
+ r.innerHTML=box('ผลลัพธ์','เกินขนาด IPv4 ที่รองรับ');
+}
+$('sc-ip').addEventListener('input',calc);sel.addEventListener('change',calc);
+$('sc-mask').addEventListener('change',fromMask);$('sc-need').addEventListener('input',need);
+var tb='',common={8:1,16:1,24:1,30:1,32:1};
+for(var c=8;c<=32;c++){var m=mk(c),row='<td>/'+c+'</td><td>'+int2ip(m)+'</td><td>'+int2ip((~m)>>>0)+'</td><td>'+fmt(Math.pow(2,32-c))+'</td><td>'+fmt(usable(c))+'</td>';
+ tb+='<tr'+(common[c]?' style="font-weight:700"':'')+'>'+row+'</tr>'}
+$('sc-table').innerHTML=tb;calc();
+})();
+</script>
+
+<h3 class="sub">ARP, TCP/UDP, DHCP และ DNS</h3>
+<div class="topics">
+<article><h3>ARP</h3>
+<p>ใน LAN การส่งข้อมูลใช้ MAC Address แต่เรารู้แค่ IP เครื่องต้นทางจึง Broadcast ถามว่า "IP นี้ MAC อะไร" แล้วจำคำตอบไว้ใน ARP Table</p>
+<code>arp -a</code></article>
+<article><h3>TCP vs UDP</h3>
+<p>TCP เชื่อถือได้ มีการจับมือก่อนส่ง (SYN → SYN-ACK → ACK) ใช้กับเว็บ, SSH ส่วน UDP เร็วแต่ไม่ตรวจว่าถึงหรือไม่ ใช้กับ DNS, VoIP, วิดีโอ</p>
+<code>HTTP 80 | HTTPS 443 | SSH 22 | DNS 53 | DHCP 67/68</code></article>
+<article><h3>DHCP ทำงานอย่างไร</h3>
+<p>Client ที่เพิ่งต่อเครือข่ายยังไม่มี IP จึง Broadcast หา Server ได้รับ IP, Subnet Mask, Gateway และ DNS กลับมาเป็นชุดเดียว ถ้าเครื่องได้ IP ขึ้นต้น 169.254.x.x แปลว่าติดต่อ DHCP Server ไม่ได้</p>
+<code>ipconfig /renew</code></article>
+<article><h3>DNS ทำงานอย่างไร</h3>
+<p>เมื่อพิมพ์ชื่อเว็บ เครื่องจะถาม DNS Server (Port 53) เพื่อขอ IP ก่อนค่อยเชื่อมต่อ ถ้า ping IP ได้แต่ ping ชื่อไม่ได้ แสดงว่าปัญหาอยู่ที่ DNS</p>
+<code>nslookup google.com</code></article>
+</div>
+
+        </section>
+
+
+        <!-- Protocols -->
+        <section id="protocols" class="section">
+            <p class="label">02 / PROTOCOLS</p>
+            <h2>โปรโตคอลที่ควรรู้</h2>
+            <p class="explain">โปรโตคอลคือ "กติกา" ที่อุปกรณ์ใช้คุยกัน แต่ละตัวทำงานคนละชั้นและมักใช้ Port เฉพาะ จำ Port และหน้าที่ของตัวที่พบบ่อยได้ จะ Troubleshoot และตั้งค่า Firewall/ACL ได้เร็วขึ้นมาก</p>
+
+            <h3 class="sub">เว็บ, โอนไฟล์ และจัดการอุปกรณ์ระยะไกล</h3>
+            <table>
+            <tr><th>โปรโตคอล</th><th>Port</th><th>หน้าที่</th><th>หมายเหตุ</th></tr>
+            <tr><td>HTTP / HTTPS</td><td>TCP 80 / 443</td><td>เว็บ (HTTPS เข้ารหัสด้วย TLS)</td><td>ใช้ HTTPS เสมอ</td></tr>
+            <tr><td>FTP</td><td>TCP 20, 21</td><td>โอนไฟล์</td><td>ไม่เข้ารหัส ส่งรหัสผ่านเป็นข้อความเปล่า</td></tr>
+            <tr><td>SFTP</td><td>TCP 22</td><td>โอนไฟล์ผ่าน SSH</td><td>ทางเลือกที่ปลอดภัยแทน FTP</td></tr>
+            <tr><td>TFTP</td><td>UDP 69</td><td>โอนไฟล์แบบง่าย ไม่มีรหัสผ่าน</td><td>นิยมใช้สำรอง Config / อัปเดต IOS ใน LAN</td></tr>
+            <tr><td>SSH</td><td>TCP 22</td><td>เข้าไปสั่งงานอุปกรณ์แบบเข้ารหัส</td><td>ใช้แทน Telnet</td></tr>
+            <tr><td>Telnet</td><td>TCP 23</td><td>เข้าไปสั่งงานอุปกรณ์</td><td>ไม่เข้ารหัส ไม่ควรใช้จริง</td></tr>
+            <tr><td>RDP</td><td>TCP 3389</td><td>เข้าควบคุมหน้าจอ Windows</td><td>-</td></tr>
+            </table>
+
+            <h3 class="sub">ดูแลและตรวจสอบเครือข่าย</h3>
+            <table>
+            <tr><th>โปรโตคอล</th><th>Port</th><th>หน้าที่</th></tr>
+            <tr><td>SNMP</td><td>UDP 161 / 162 (Trap)</td><td>ระบบ Monitor ดึงสถานะอุปกรณ์ (CPU, Interface) ควรใช้ SNMPv3 เพราะ v1/v2c ส่ง Community แบบข้อความเปล่า</td></tr>
+            <tr><td>Syslog</td><td>UDP 514</td><td>ส่ง Log จากอุปกรณ์ไปเก็บที่เครื่องกลาง</td></tr>
+            <tr><td>NTP</td><td>UDP 123</td><td>ซิงก์เวลา ถ้าเวลาไม่ตรง Log จะอ่านยากและ Certificate อาจใช้ไม่ได้</td></tr>
+            <tr><td>ICMP</td><td>ไม่มี Port (Layer 3)</td><td>ใช้กับ ping และ traceroute รายงานข้อผิดพลาด</td></tr>
+            <tr><td>DHCP / DNS / ARP</td><td>UDP 67-68 / 53 / ไม่มี</td><td>แจก IP / แปลงชื่อเป็น IP / หา MAC จาก IP</td></tr>
+            <tr><td>SMTP / POP3 / IMAP</td><td>TCP 25 (587) / 110 / 143</td><td>ส่งอีเมล / ดึงอีเมลลงเครื่อง / ซิงก์อีเมลกับ Server</td></tr>
+            </table>
+            <div class="note"><b>จำง่าย ๆ:</b> โปรโตคอลที่ "ไม่เข้ารหัส" (Telnet, FTP, HTTP, SNMPv1/v2c, TFTP) ใช้ได้ในวง Lab แต่ในงานจริงให้เลือกตัวที่เข้ารหัส (SSH, SFTP, HTTPS, SNMPv3)</div>
+
+            <div class="command-box"><h3>Cisco - เปิด SSH แทน Telnet</h3>
+<pre>
+hostname R1
+ip domain-name lab.local
+crypto key generate rsa modulus 2048
+ip ssh version 2
+username admin privilege 15 secret MyPass123
+
+line vty 0 4
+login local
+transport input ssh
+</pre></div>
+            <div class="command-box"><h3>Cisco - NTP และ Syslog</h3>
+<pre>
+ntp server 10.0.0.10
+logging host 10.0.0.20
+service timestamps log datetime msec
+show ntp status
+</pre></div>
+
+            <h3 class="sub">โปรโตคอลระดับ Layer 2 และความสำรอง</h3>
+            <table>
+            <tr><th>โปรโตคอล</th><th>หน้าที่</th><th>เทียบ Cisco / มาตรฐาน</th></tr>
+            <tr><td>802.1Q</td><td>ติด VLAN Tag บน Trunk</td><td>มาตรฐานกลาง</td></tr>
+            <tr><td>STP / RSTP</td><td>ป้องกัน Loop (RSTP 802.1w สลับพอร์ตเร็วกว่า)</td><td>มาตรฐานกลาง</td></tr>
+            <tr><td>LACP</td><td>รวมสายหลายเส้นเป็นลิงก์เดียว (EtherChannel / Link Aggregation)</td><td>802.3ad / 802.1AX</td></tr>
+            <tr><td>CDP / LLDP</td><td>อุปกรณ์ข้างเคียงประกาศตัวตน ช่วยดู Topology จริง</td><td>CDP = Cisco, LLDP = มาตรฐานกลาง</td></tr>
+            <tr><td>HSRP / VRRP</td><td>ใช้ Router สองตัวเป็น Gateway เสมือนตัวเดียว ตัวหนึ่งล่มอีกตัวรับช่วง</td><td>HSRP = Cisco, VRRP = มาตรฐานกลาง</td></tr>
+            </table>
+
+            <h3 class="sub">โปรโตคอล Routing</h3>
+            <table>
+            <tr><th>โปรโตคอล</th><th>ประเภท</th><th>AD</th><th>ลักษณะ</th></tr>
+            <tr><td>RIP v2</td><td>Distance Vector</td><td>120</td><td>นับ Hop (สูงสุด 15) ง่ายแต่ช้า ใช้กับเครือข่ายเล็ก</td></tr>
+            <tr><td>EIGRP</td><td>Advanced Distance Vector</td><td>90</td><td>เร็ว ตั้งค่าง่าย เดิมเป็นของ Cisco</td></tr>
+            <tr><td>OSPF</td><td>Link-State</td><td>110</td><td>มาตรฐานกลาง นิยมที่สุดภายในองค์กร</td></tr>
+            <tr><td>BGP</td><td>Path Vector (TCP 179)</td><td>20 (eBGP)</td><td>ใช้ระหว่าง ISP / องค์กรที่มี AS ของตัวเอง ใช้ข้ามอินเทอร์เน็ต</td></tr>
+            </table>
+            <div class="note"><b>IGP vs EGP:</b> RIP, EIGRP, OSPF ใช้ภายในองค์กรเดียว (IGP) ส่วน BGP ใช้เชื่อมระหว่างองค์กร (EGP) Router ที่เห็นหลายโปรโตคอลรู้จักเส้นทางเดียวกัน จะเชื่อค่า AD ที่ต่ำกว่า</div>
+        
+            <h3 class="sub">DHCP ทีละขั้น (DORA)</h3>
+            <table>
+            <tr><th>ขั้น</th><th>ข้อความ</th><th>เกิดอะไรขึ้น</th></tr>
+            <tr><td>1</td><td>Discover</td><td>Client ยังไม่มี IP จึง Broadcast (ปลายทาง 255.255.255.255) ถามหา DHCP Server</td></tr>
+            <tr><td>2</td><td>Offer</td><td>Server เสนอ IP, Mask, Gateway, DNS และอายุการเช่า (Lease)</td></tr>
+            <tr><td>3</td><td>Request</td><td>Client ตอบรับ IP ที่เสนอ (Broadcast เพื่อแจ้ง Server อื่นว่าเลือกตัวนี้แล้ว)</td></tr>
+            <tr><td>4</td><td>Acknowledge</td><td>Server ยืนยัน Client เริ่มใช้ IP ได้ และจะขอต่ออายุเมื่อใช้ไปครึ่งหนึ่งของ Lease</td></tr>
+            </table>
+            <div class="note"><b>Broadcast ข้าม Router ไม่ได้:</b> ถ้า DHCP Server อยู่คนละ Subnet/VLAN กับ Client ต้องตั้ง <code>ip helper-address [IP ของ DHCP Server]</code> บน Interface ที่เป็น Gateway ของ Client เพื่อให้ Router ส่งต่อคำขอ (DHCP Relay)</div>
+<div class="command-box"><h3>Cisco - ตั้ง DHCP Server บน Router</h3>
+<pre>
+ip dhcp excluded-address 192.168.10.1 192.168.10.20
+ip dhcp pool VLAN10
+ network 192.168.10.0 255.255.255.0
+ default-router 192.168.10.1
+ dns-server 8.8.8.8
+ lease 1
+show ip dhcp binding
+</pre></div>
+
+            <h3 class="sub">DNS ทำงานอย่างไร</h3>
+            <p class="explain">เมื่อพิมพ์ www.example.com เครื่องจะค้นหาตามลำดับ: แคชของเบราว์เซอร์ → แคชของระบบและไฟล์ hosts → <b>DNS Resolver</b> (เช่น ของ ISP หรือ 8.8.8.8) ถ้า Resolver ไม่รู้ จะถามต่อเป็นทอด ๆ คือ Root Server → Server ของ .com (TLD) → Authoritative Server ของโดเมนนั้น แล้วเก็บคำตอบไว้ตามเวลา TTL</p>
+            <table>
+            <tr><th>Record</th><th>ใช้ทำอะไร</th><th>ตัวอย่าง</th></tr>
+            <tr><td>A</td><td>ชื่อ → IPv4</td><td>example.com → 93.184.216.34</td></tr>
+            <tr><td>AAAA</td><td>ชื่อ → IPv6</td><td>example.com → 2606:...</td></tr>
+            <tr><td>CNAME</td><td>ชื่อเล่นชี้ไปอีกชื่อ</td><td>www → example.com</td></tr>
+            <tr><td>MX</td><td>Server รับอีเมลของโดเมน</td><td>mail.example.com (priority 10)</td></tr>
+            <tr><td>NS</td><td>Name Server ที่ดูแลโดเมน</td><td>ns1.example.com</td></tr>
+            <tr><td>PTR</td><td>IP → ชื่อ (Reverse)</td><td>ตรวจสอบอีเมล / Log</td></tr>
+            <tr><td>TXT</td><td>ข้อความทั่วไป</td><td>SPF, การยืนยันความเป็นเจ้าของโดเมน</td></tr>
+            </table>
+
+            <h3 class="sub">NAT / PAT</h3>
+            <p class="explain">NAT แปลง Private IP ภายในเป็น Public IP เมื่อออกอินเทอร์เน็ต ช่วยประหยัด IPv4 และซ่อนโครงสร้างภายใน</p>
+            <table>
+            <tr><th>ชนิด</th><th>การทำงาน</th><th>ใช้เมื่อ</th></tr>
+            <tr><td>Static NAT</td><td>1 Private ↔ 1 Public ตายตัว</td><td>Server ภายในที่ให้คนข้างนอกเข้าถึง</td></tr>
+            <tr><td>Dynamic NAT</td><td>จับคู่จาก Pool ของ Public IP</td><td>มี Public IP หลายตัวให้สลับใช้</td></tr>
+            <tr><td>PAT (Overload)</td><td>หลาย Private ใช้ Public IP ตัวเดียว แยกกันด้วย Port</td><td>ออฟฟิศและบ้านทั่วไป (ใช้บ่อยที่สุด)</td></tr>
+            </table>
+            <div class="note"><b>ศัพท์ใน Cisco:</b> Inside Local = IP ภายในจริง, Inside Global = IP ที่คนข้างนอกเห็น ตรวจด้วย <code>show ip nat translations</code> (ตัวอย่างตั้งค่าอยู่ใน Lab 06)</div>
+
+        </section>
+
+
+        <!-- Switching -->
+        <section id="switching" class="section">
+
+            <p class="label">
+                03 / SWITCHING
+            </p>
+
+            <h2>
+                VLAN & Switching
+            </h2>
+
+
+            <div class="command-box">
+
+                <h3>
+                    Cisco - Create VLAN
+                </h3>
+
+<pre>
+enable
+
+configure terminal
+
+vlan 10
+
+name IT
+
+interface gigabitEthernet 0/1
+
+switchport mode access
+
+switchport access vlan 10
+
+no shutdown
+
+end
+
+show vlan brief
+</pre>
+
+            </div>
+
+        
+<h3 class="sub">VLAN คืออะไร</h3>
+<p class="explain">VLAN แบ่ง Switch ตัวเดียวออกเป็นหลาย Network แยกกันในทางตรรกะ (แต่ละ VLAN คือหนึ่ง Broadcast Domain) ช่วยลด Broadcast เพิ่มความปลอดภัย และจัดกลุ่มตามแผนก เช่น VLAN 10 = IT, VLAN 20 = บัญชี เครื่องต่าง VLAN จะคุยกันไม่ได้ จนกว่าจะผ่าน Router หรือ Layer 3 Switch</p>
+<h3 class="sub">Access Port vs Trunk Port</h3>
+<table>
+<tr><th>ชนิด</th><th>ใช้ต่อกับ</th><th>ลักษณะ</th></tr>
+<tr><td>Access</td><td>PC, Printer, AP</td><td>อยู่ได้ 1 VLAN, frame ไม่มี tag</td></tr>
+<tr><td>Trunk</td><td>Switch ↔ Switch, Switch ↔ Router</td><td>ส่งได้หลาย VLAN บนสายเดียว โดยติด tag 802.1Q</td></tr>
+</table>
+<div class="command-box"><h3>Cisco - Trunk Port</h3>
+<pre>
+interface gigabitEthernet 0/24
+switchport trunk encapsulation dot1q   ! เฉพาะรุ่นที่ต้องระบุ
+switchport mode trunk
+switchport trunk allowed vlan 10,20
+end
+show interfaces trunk
+</pre></div>
+<div class="note">ถ้า Trunk ไม่ได้ allow VLAN ไหน เครื่องใน VLAN นั้นจะข้าม Switch ไปไม่ได้ ซึ่งเป็นสาเหตุที่พบบ่อยมาก</div>
+
+<h3 class="sub">STP (Spanning Tree Protocol)</h3>
+<p class="explain">เมื่อมีสายเชื่อม Switch เป็นวงกลม (Loop) Broadcast จะวนไม่จบจนเครือข่ายล่ม STP จึงเลือกบางพอร์ตให้ Block ไว้ก่อน และเปิดใช้เมื่อเส้นทางหลักขาด ขั้นตอนคือเลือก Root Bridge (Bridge ID ต่ำสุด = Priority + MAC) จากนั้นแต่ละ Switch เลือก Root Port (ทางที่ใกล้ Root สุด) ส่วนลิงก์ที่เหลือจะมี Designated Port และ Blocked Port</p>
+<div class="command-box"><h3>STP Commands</h3>
+<pre>
+show spanning-tree
+spanning-tree vlan 1 priority 4096   ! ทำให้ Switch นี้เป็น Root
+</pre></div>
+
+<h3 class="sub">Inter-VLAN Routing (Router-on-a-Stick)</h3>
+<p class="explain">ให้ Router พอร์ตเดียวต่อกับ Trunk แล้วสร้าง Sub-interface หนึ่งตัวต่อหนึ่ง VLAN โดย IP ของ Sub-interface คือ Default Gateway ของ VLAN นั้น</p>
+<div class="topo"><svg viewBox="0 0 490 130" role="img">
+<rect x="10" y="45" width="100" height="40" rx="6" class="b"/><text x="60" y="68">Router</text>
+<rect x="190" y="45" width="100" height="40" rx="6" class="b"/><text x="240" y="68">Switch</text>
+<path d="M110 65H190" class="tr"/><text x="150" y="38">Trunk (VLAN 10, 20)</text><text x="150" y="102">Gi0/0.10 และ Gi0/0.20</text>
+<path d="M290 55L345 28M290 75L345 102" class="ln"/>
+<rect x="345" y="12" width="135" height="32" rx="6" class="b"/><text x="412" y="32">PC1 · VLAN 10</text>
+<rect x="345" y="86" width="135" height="32" rx="6" class="b"/><text x="412" y="106">PC2 · VLAN 20</text>
+</svg></div>
+<div class="command-box"><h3>Cisco - Router-on-a-Stick</h3>
+<pre>
+interface gigabitEthernet 0/0
+no shutdown
+
+interface gigabitEthernet 0/0.10
+encapsulation dot1Q 10
+ip address 192.168.10.1 255.255.255.0
+
+interface gigabitEthernet 0/0.20
+encapsulation dot1Q 20
+ip address 192.168.20.1 255.255.255.0
+</pre></div>
+
+        
+            <h3 class="sub">Switch เรียนและส่งต่อ Frame อย่างไร</h3>
+            <table>
+            <tr><th>การกระทำ</th><th>เมื่อไร</th></tr>
+            <tr><td>Learn</td><td>ทุกครั้งที่รับ Frame จะจด MAC ต้นทางและพอร์ตที่เข้ามาลง MAC Address Table (อายุเริ่มต้น 300 วินาที)</td></tr>
+            <tr><td>Forward</td><td>รู้ว่า MAC ปลายทางอยู่พอร์ตไหน ส่งออกพอร์ตนั้นพอร์ตเดียว</td></tr>
+            <tr><td>Flood</td><td>ไม่รู้ MAC ปลายทาง หรือเป็น Broadcast ส่งออกทุกพอร์ตใน VLAN เดียวกัน ยกเว้นพอร์ตที่รับเข้ามา</td></tr>
+            <tr><td>Filter</td><td>ปลายทางอยู่พอร์ตเดียวกับต้นทาง ไม่ส่งต่อ</td></tr>
+            </table>
+            <div class="command-box"><h3>ดู / ล้าง MAC Table</h3>
+<pre>
+show mac address-table
+clear mac address-table dynamic
+</pre></div>
+
+            <h3 class="sub">VLAN Range และ Native VLAN</h3>
+            <table>
+            <tr><th>ช่วง VLAN</th><th>ลักษณะ</th></tr>
+            <tr><td>1</td><td>VLAN เริ่มต้น ลบไม่ได้ ไม่ควรใช้เป็น VLAN ของผู้ใช้</td></tr>
+            <tr><td>2 - 1001</td><td>Normal Range ใช้งานทั่วไป</td></tr>
+            <tr><td>1002 - 1005</td><td>สงวนไว้ (Token Ring / FDDI รุ่นเก่า)</td></tr>
+            <tr><td>1006 - 4094</td><td>Extended Range</td></tr>
+            </table>
+            <p class="explain"><b>Native VLAN</b> คือ VLAN ที่ส่งบน Trunk <b>โดยไม่ติด Tag</b> (ค่าเริ่มต้น VLAN 1) ต้องตั้งให้ตรงกันทั้งสองฝั่งของ Trunk ถ้าไม่ตรงจะมีข้อความเตือนและทราฟฟิกรั่วข้าม VLAN ได้ แนะนำให้เปลี่ยนเป็น VLAN ที่ไม่ได้ใช้งาน</p>
+<div class="command-box"><h3>ตั้ง Native VLAN</h3>
+<pre>
+interface gigabitEthernet 0/24
+ switchport trunk native vlan 99
+</pre></div>
+
+            <h3 class="sub">EtherChannel (รวมหลายสายเป็นหนึ่ง)</h3>
+            <p class="explain">รวมสายหลายเส้นระหว่าง Switch เข้าเป็นลิงก์เสมือนเส้นเดียว เพิ่มแบนด์วิดท์และสำรองกัน (เส้นหนึ่งขาด อีกเส้นยังใช้ได้) โดยไม่ถูก STP ปิดพอร์ตทิ้ง พอร์ตที่รวมกันต้องมี Speed, Duplex และ VLAN/Trunk เหมือนกัน และอย่างน้อยหนึ่งฝั่งต้องเป็น <code>active</code> สำหรับ LACP</p>
+<div class="command-box"><h3>Cisco - LACP</h3>
+<pre>
+interface range gigabitEthernet 0/23 - 24
+ channel-group 1 mode active
+interface port-channel 1
+ switchport mode trunk
+show etherchannel summary
+</pre></div>
+
+            <h3 class="sub">Port Security (กันเสียบเครื่องแปลกปลอม)</h3>
+<div class="command-box"><h3>จำกัดจำนวน MAC บนพอร์ต</h3>
+<pre>
+interface gigabitEthernet 0/1
+ switchport mode access
+ switchport port-security
+ switchport port-security maximum 2
+ switchport port-security mac-address sticky
+ switchport port-security violation shutdown
+show port-security interface gigabitEthernet 0/1
+</pre></div>
+
+            <div class="note">เมื่อมี MAC เกินจำนวน (Violation) แบบ <code>shutdown</code> พอร์ตจะเข้าสถานะ err-disabled วิธีกู้คือสั่ง <code>shutdown</code> แล้ว <code>no shutdown</code> บนพอร์ตนั้น หลังแก้สาเหตุแล้ว</div>
+
+            <h3 class="sub">Layer 3 Switch และ SVI</h3>
+            <p class="explain">Layer 3 Switch ทำ Routing ระหว่าง VLAN ได้เองด้วย SVI (Switch Virtual Interface) เร็วกว่า Router-on-a-Stick เพราะไม่ต้องผ่านลิงก์ Trunk เส้นเดียว IP ของ SVI คือ Gateway ของ VLAN นั้น และ SVI จะ up ก็ต่อเมื่อมี VLAN นั้นอยู่และมีพอร์ตที่ active อย่างน้อยหนึ่งพอร์ต</p>
+<div class="command-box"><h3>Cisco - Inter-VLAN ด้วย SVI</h3>
+<pre>
+ip routing
+interface vlan 10
+ ip address 192.168.10.1 255.255.255.0
+ no shutdown
+interface vlan 20
+ ip address 192.168.20.1 255.255.255.0
+ no shutdown
+</pre></div>
+
+        </section>
+
+
+        <!-- Routing -->
+        <section id="routing" class="section">
+
+            <p class="label">
+                04 / ROUTING
+            </p>
+
+            <h2>
+                Routing
+            </h2>
+
+
+            <div class="command-box">
+
+                <h3>
+                    Static Route
+                </h3>
+
+<pre>
+enable
+
+configure terminal
+
+ip route 192.168.20.0
+255.255.255.0
+10.0.0.2
+
+end
+
+show ip route
+</pre>
+
+            </div>
+
+
+            <div class="command-box">
+
+                <h3>
+                    OSPF
+                </h3>
+
+<pre>
+router ospf 1
+
+router-id 1.1.1.1
+
+network 10.0.0.0
+0.0.0.3 area 0
+
+network 192.168.10.0
+0.0.0.255 area 0
+
+show ip ospf neighbor
+</pre>
+
+            </div>
+
+        
+<h3 class="sub">Router ตัดสินใจเลือกเส้นทางอย่างไร</h3>
+<p class="explain">Router ดู Destination IP ของแพ็กเก็ต แล้วเทียบกับ Routing Table โดยเลือกรายการที่ Prefix ตรงและ <b>ยาวที่สุด</b> (Longest Prefix Match) เช่น มี 10.0.0.0/8 และ 10.1.1.0/24 ปลายทาง 10.1.1.5 จะใช้ /24 ถ้าไม่เจอเลยจะใช้ Default Route (0.0.0.0/0) หรือทิ้งแพ็กเก็ต</p>
+<p class="explain">ถ้ามีหลายโปรโตคอลรู้จักเครือข่ายเดียวกัน Router จะเชื่อค่า <b>Administrative Distance (AD)</b> ที่ต่ำกว่า: Connected = 0, Static = 1, EIGRP = 90, OSPF = 110, RIP = 120</p>
+<div class="command-box"><h3>Static Route และ Default Route</h3>
+<pre>
+! รูปแบบ: ip route [เครือข่ายปลายทาง] [mask] [next-hop]
+ip route 192.168.20.0 255.255.255.0 10.0.0.2
+
+! Default Route: ส่งทุกอย่างที่ไม่รู้จักไปทางนี้ (มักชี้ไป ISP)
+ip route 0.0.0.0 0.0.0.0 10.0.0.2
+</pre></div>
+<div class="note"><b>อ่าน Routing Table:</b> รหัส <b>C</b> = Connected, <b>L</b> = Local, <b>S</b> = Static, <b>O</b> = OSPF<br>
+ตัวอย่าง <code>S 192.168.20.0/24 [1/0] via 10.0.0.2</code> = Static Route, AD 1, Metric 0, ส่งต่อไปที่ 10.0.0.2<br>
+<b>จำไว้:</b> ต้องมี Route ทั้ง "ขาไป" และ "ขากลับ" ไม่เช่นนั้น ping จะไม่ตอบ</div>
+
+<h3 class="sub">OSPF</h3>
+<p class="explain">OSPF เป็น Dynamic Routing แบบ Link-State Router แต่ละตัวแลกเปลี่ยนข้อมูลลิงก์จนทุกตัวมีแผนที่เครือข่ายเหมือนกัน แล้วคำนวณเส้นทางที่ Cost ต่ำสุด (Cost มาจากความเร็วลิงก์) Area 0 คือ Backbone ที่ทุก Area ต้องเชื่อมถึง</p>
+<p class="explain"><b>Wildcard Mask</b> คือค่าตรงข้ามของ Subnet Mask เช่น 255.255.255.252 → 0.0.0.3 และ 255.255.255.0 → 0.0.0.255 (bit 0 = ต้องตรง, bit 1 = ไม่สนใจ)</p>
+<div class="note"><b>เงื่อนไขที่ Router จะเป็น Neighbor กัน:</b> อยู่ Area เดียวกัน, Subnet เดียวกันบนลิงก์, Hello/Dead Timer ตรงกัน, Router ID ไม่ซ้ำ<br>
+<b>สถานะที่ควรเห็น:</b> Down → Init → 2-Way → ExStart → Exchange → Loading → <b>Full</b> (ใช้ <code>show ip ospf neighbor</code> ตรวจ ถ้าค้างที่ Init หรือ ExStart ให้ตรวจ Timer และ MTU)<br>
+ดู Route ที่ได้จาก OSPF: <code>show ip route ospf</code></div>
+
+        
+            <h3 class="sub">Static Route สำรอง (Floating Static)</h3>
+            <p class="explain">กำหนดค่า AD ของ Route สำรองให้สูงกว่า Route หลัก Router จะใช้ Route หลักตามปกติ และสลับมาใช้ Route สำรองเมื่อ Route หลักหายไป</p>
+<div class="command-box"><h3>Default Route หลัก + สำรอง</h3>
+<pre>
+ip route 0.0.0.0 0.0.0.0 203.0.113.1        ! หลัก (AD 1)
+ip route 0.0.0.0 0.0.0.0 198.51.100.1 250    ! สำรอง (AD 250)
+</pre></div>
+
+            <h3 class="sub">OSPF Cost และ Reference Bandwidth</h3>
+            <p class="explain">Cost = Reference Bandwidth ÷ ความเร็ว Interface โดยค่าเริ่มต้น Reference = 100 Mbps ทำให้ลิงก์ 100 Mbps, 1 Gbps และ 10 Gbps ได้ Cost เท่ากันที่ 1 OSPF จึงเลือกเส้นทางไม่ตรงความเร็วจริง ควรปรับ Reference ให้เท่ากันทุก Router ในโดเมน</p>
+            <table>
+            <tr><th>ความเร็ว Interface</th><th>Cost (Ref 100 Mbps)</th><th>Cost (Ref 10,000 Mbps)</th></tr>
+            <tr><td>10 Mbps</td><td>10</td><td>1000</td></tr>
+            <tr><td>100 Mbps</td><td>1</td><td>100</td></tr>
+            <tr><td>1 Gbps</td><td>1</td><td>10</td></tr>
+            <tr><td>10 Gbps</td><td>1</td><td>1</td></tr>
+            </table>
+<div class="command-box"><h3>ปรับ Reference Bandwidth</h3>
+<pre>
+router ospf 1
+ auto-cost reference-bandwidth 10000
+show ip ospf interface brief
+</pre></div>
+
+            <h3 class="sub">ตรวจว่า Router จะส่งแพ็กเก็ตไปทางไหน</h3>
+<div class="command-box"><h3>ดู Route ที่ตรงกับ IP ปลายทาง</h3>
+<pre>
+show ip route 192.168.20.5   ! แสดง Route ที่ตรงที่สุดสำหรับ IP นี้
+show ip route | include 0.0.0.0
+traceroute 192.168.20.5
+</pre></div>
+
+            <div class="note">ถ้า <code>show ip route [IP]</code> ตอบว่า "Network not in table" แปลว่าไม่มี Route ไปปลายทางนั้น (และไม่มี Default Route) ให้เพิ่ม Route หรือตรวจว่า OSPF เรียนรู้ครบหรือยัง</div>
+
+        </section>
+
+
+        <!-- Cisco -->
+        <section id="cisco" class="section">
+
+            <p class="label">
+                05 / CISCO
+            </p>
+
+            <h2>
+                Cisco Commands
+            </h2>
+
+
+            <table>
+
+                <tr>
+                    <th>
+                        Command
+                    </th>
+
+                    <th>
+                        ใช้ทำอะไร
+                    </th>
+                </tr>
+
+
+                <tr>
+
+                    <td>
+                        show ip interface brief
+                    </td>
+
+                    <td>
+                        ตรวจสอบ Interface
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>
+                        show ip route
+                    </td>
+
+                    <td>
+                        ตรวจสอบ Routing Table
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>
+                        show vlan brief
+                    </td>
+
+                    <td>
+                        ตรวจสอบ VLAN
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>
+                        show running-config
+                    </td>
+
+                    <td>
+                        ดู Configuration
+                    </td>
+
+                </tr>
+
+            </table>
+
+        
+<h3 class="sub">โหมดการทำงานของ Cisco IOS</h3>
+<table>
+<tr><th>โหมด</th><th>Prompt</th><th>เข้าด้วยคำสั่ง</th></tr>
+<tr><td>User EXEC</td><td>Router&gt;</td><td>(โหมดเริ่มต้น ดูข้อมูลได้จำกัด)</td></tr>
+<tr><td>Privileged EXEC</td><td>Router#</td><td>enable</td></tr>
+<tr><td>Global Config</td><td>Router(config)#</td><td>configure terminal</td></tr>
+<tr><td>Interface Config</td><td>Router(config-if)#</td><td>interface [ชื่อ]</td></tr>
+</table>
+<h3 class="sub">คำสั่งที่ใช้บ่อยเพิ่มเติม</h3>
+<table>
+<tr><th>Command</th><th>ใช้ทำอะไร</th></tr>
+<tr><td>show interfaces trunk</td><td>ดูพอร์ต Trunk และ VLAN ที่ผ่านได้</td></tr>
+<tr><td>show mac address-table</td><td>ดูว่า MAC ไหนอยู่พอร์ตไหน</td></tr>
+<tr><td>show ip ospf neighbor</td><td>ตรวจสถานะ OSPF Neighbor</td></tr>
+<tr><td>ping / traceroute</td><td>ทดสอบการเชื่อมต่อ / ดูเส้นทางทีละ Hop</td></tr>
+<tr><td>copy running-config startup-config</td><td>บันทึก Config (หรือ write memory)</td></tr>
+</table>
+<div class="note"><b>Running-config vs Startup-config:</b> Running อยู่ใน RAM มีผลทันทีแต่หายเมื่อรีบูต ส่วน Startup อยู่ใน NVRAM ต้องสั่ง save ทุกครั้งหลังตั้งค่าเสร็จ</div>
+
+        
+            <h3 class="sub">ตั้งค่าพื้นฐานเมื่อได้อุปกรณ์ใหม่</h3>
+<div class="command-box"><h3>Cisco - Initial Setup</h3>
+<pre>
+enable
+configure terminal
+hostname SW1
+no ip domain-lookup
+enable secret MyPass123
+service password-encryption
+banner motd #Authorized Access Only#
+interface vlan 99
+ ip address 192.168.99.2 255.255.255.0
+ no shutdown
+exit
+ip default-gateway 192.168.99.1
+end
+copy running-config startup-config
+</pre></div>
+
+            <p class="explain"><code>no ip domain-lookup</code> ป้องกันอุปกรณ์ค้างเมื่อพิมพ์คำสั่งผิดแล้วพยายามแปลเป็นชื่อโฮสต์, <code>enable secret</code> เก็บรหัสแบบเข้ารหัสแรงกว่า <code>enable password</code>, ส่วน IP บน VLAN 99 คือที่อยู่สำหรับจัดการ Switch (Management)</p>
+
+            <h3 class="sub">เทคนิคใช้ CLI ให้เร็วขึ้น</h3>
+            <table>
+            <tr><th>วิธี</th><th>ผลลัพธ์</th></tr>
+            <tr><td>?</td><td>แสดงคำสั่งหรือพารามิเตอร์ที่ใช้ได้ ณ ตำแหน่งนั้น (เช่น <code>show ip ?</code>)</td></tr>
+            <tr><td>Tab</td><td>เติมคำสั่งที่พิมพ์ค้างไว้ให้ครบ</td></tr>
+            <tr><td>พิมพ์ย่อ</td><td>เช่น <code>sh ip int br</code> = show ip interface brief</td></tr>
+            <tr><td>show run | include [คำ]</td><td>กรองเฉพาะบรรทัดที่มีคำนั้น (ยังมี <code>| section</code>, <code>| begin</code>)</td></tr>
+            <tr><td>do [คำสั่ง]</td><td>รันคำสั่ง show ขณะอยู่ในโหมด config</td></tr>
+            <tr><td>Ctrl+Z</td><td>ออกจากโหมด config กลับ Privileged EXEC</td></tr>
+            </table>
+
+            <h3 class="sub">ACL (Access Control List)</h3>
+            <p class="explain">ACL คือรายการกฎอนุญาต (permit) หรือปฏิเสธ (deny) แพ็กเก็ต ตรวจ <b>จากบนลงล่าง เจอกฎที่ตรงก่อนใช้กฎนั้นทันที</b> และท้ายสุดมี <b>deny all ซ่อนอยู่เสมอ</b> (implicit deny) จึงต้องใส่ permit ที่ต้องการไว้ด้วย ใช้ Wildcard Mask เหมือน OSPF</p>
+            <table>
+            <tr><th>ชนิด</th><th>ตรวจอะไร</th><th>ควรวางที่</th></tr>
+            <tr><td>Standard (1-99)</td><td>IP ต้นทางอย่างเดียว</td><td>ใกล้ปลายทาง</td></tr>
+            <tr><td>Extended (100-199 หรือ Named)</td><td>โปรโตคอล, IP ต้นทาง/ปลายทาง, Port</td><td>ใกล้ต้นทาง</td></tr>
+            </table>
+<div class="command-box"><h3>Extended ACL - บล็อก VLAN 20 ไม่ให้เข้าเว็บเซิร์ฟเวอร์ใน VLAN 10</h3>
+<pre>
+ip access-list extended BLOCK-HR
+ deny tcp 192.168.20.0 0.0.0.255 host 192.168.10.5 eq 80
+ permit ip any any
+interface gigabitEthernet 0/0.20
+ ip access-group BLOCK-HR in
+show access-lists
+</pre></div>
+
+            <div class="note">ถ้าลืมบรรทัด <code>permit ip any any</code> ทราฟฟิกอื่นทั้งหมดจะถูกบล็อกด้วย implicit deny และอย่าลืมว่า <code>in</code> / <code>out</code> นับจากมุมมองของ Router เอง</div>
+
+        </section>
+
+
+        <!-- Huawei -->
+        <section id="huawei" class="section">
+
+            <p class="label">
+                06 / HUAWEI
+            </p>
+
+            <h2>
+                Huawei VRP
+            </h2>
+
+
+            <div class="command-box">
+
+                <h3>
+                    Configure Interface
+                </h3>
+
+<pre>
+system-view
+
+interface GigabitEthernet 0/0/1
+
+ip address 192.168.10.1 24
+
+undo shutdown
+
+quit
+
+display ip interface brief
+
+display ip routing-table
+</pre>
+
+            </div>
+
+        
+<h3 class="sub">เทียบคำสั่ง Cisco กับ Huawei</h3>
+<p class="explain">Huawei VRP มีแนวคิดเหมือน Cisco แต่ใช้คำต่างกัน: <code>show</code> → <code>display</code>, <code>no</code> → <code>undo</code>, และเข้าโหมดตั้งค่าด้วย <code>system-view</code></p>
+<table>
+<tr><th>Cisco</th><th>Huawei</th><th>ความหมาย</th></tr>
+<tr><td>configure terminal</td><td>system-view</td><td>เข้าโหมดตั้งค่า</td></tr>
+<tr><td>show ip route</td><td>display ip routing-table</td><td>ดู Routing Table</td></tr>
+<tr><td>show vlan brief</td><td>display vlan</td><td>ดู VLAN</td></tr>
+<tr><td>no shutdown</td><td>undo shutdown</td><td>เปิดพอร์ต</td></tr>
+<tr><td>write memory</td><td>save</td><td>บันทึก Config</td></tr>
+<tr><td>exit</td><td>quit</td><td>ออก 1 ระดับ</td></tr>
+</table>
+<div class="command-box"><h3>Huawei - VLAN, Access และ Trunk</h3>
+<pre>
+system-view
+vlan batch 10 20
+
+interface GigabitEthernet 0/0/1
+port link-type access
+port default vlan 10
+quit
+
+interface GigabitEthernet 0/0/24
+port link-type trunk
+port trunk allow-pass vlan 10 20
+quit
+
+display vlan
+</pre></div>
+<div class="command-box"><h3>Huawei - OSPF</h3>
+<pre>
+ospf 1 router-id 1.1.1.1
+area 0
+network 10.0.0.0 0.0.0.3
+network 192.168.10.0 0.0.0.255
+quit
+quit
+display ospf peer brief
+</pre></div>
+
+        
+            <h3 class="sub">Huawei - ตั้งค่าพื้นฐานและ Gateway ด้วย Vlanif</h3>
+            <p class="explain">บน Switch ของ Huawei ที่เป็น Layer 3 จะสร้าง IP Gateway ของ VLAN ที่ Interface <code>Vlanif</code> (เทียบเท่า SVI ของ Cisco) การตั้งค่าที่เปลี่ยนแล้วมีผลทันทีแต่ต้องสั่ง <code>save</code> เพื่อเก็บถาวร</p>
+<div class="command-box"><h3>Huawei - Vlanif และ Save</h3>
+<pre>
+system-view
+sysname SW1
+vlan batch 10 20
+interface Vlanif 10
+ ip address 192.168.10.1 24
+interface Vlanif 20
+ ip address 192.168.20.1 24
+quit
+return
+save
+display current-configuration
+</pre></div>
+
+            <h3 class="sub">Huawei - DHCP Server</h3>
+<div class="command-box"><h3>DHCP แบบ Global Pool</h3>
+<pre>
+system-view
+dhcp enable
+ip pool VLAN10
+ gateway-list 192.168.10.1
+ network 192.168.10.0 mask 255.255.255.0
+ dns-list 8.8.8.8
+ quit
+interface Vlanif 10
+ dhcp select global
+</pre></div>
+
+            <div class="note"><b>จำต่างจาก Cisco:</b> <code>quit</code> ออก 1 ระดับ, <code>return</code> (หรือ Ctrl+Z) กลับ User View ทันที, ใช้ <code>?</code> ดูคำสั่งได้เหมือนกัน และ <code>display this</code> แสดง Config เฉพาะส่วนที่อยู่ ณ ตำแหน่งปัจจุบัน</div>
+
+        </section>
+
+
+        <!-- Console -->
+        <section id="console" class="section">
+            <p class="label">07 / CONSOLE</p>
+            <h2>สาย Console</h2>
+            <p class="explain">Console คือช่องสำหรับต่อคอมพิวเตอร์เข้าอุปกรณ์โดยตรงผ่านสาย Serial <b>ไม่ต้องมี IP</b> จึงใช้ตอนตั้งค่าอุปกรณ์ใหม่ครั้งแรก (ยังไม่มี IP ให้ SSH), กู้รหัสผ่าน หรือแก้อุปกรณ์ที่ SSH เข้าไม่ได้แล้ว พอร์ต Console มักเขียนว่า CONSOLE และบางรุ่นทาสีฟ้า ไม่ใช่พอร์ต LAN</p>
+            <div class="gal"><figure><svg viewBox="0 0 160 90" role="img"><rect x="8" y="34" width="24" height="22" rx="2" class="b"/><path d="M12.0 40V50" class="ln" style="stroke:#f59e0b;stroke-width:1.4"/><path d="M14.6 40V50" class="ln" style="stroke:#f59e0b;stroke-width:1.4"/><path d="M17.2 40V50" class="ln" style="stroke:#f59e0b;stroke-width:1.4"/><path d="M19.8 40V50" class="ln" style="stroke:#f59e0b;stroke-width:1.4"/><path d="M22.4 40V50" class="ln" style="stroke:#f59e0b;stroke-width:1.4"/><path d="M25.0 40V50" class="ln" style="stroke:#f59e0b;stroke-width:1.4"/><path d="M27.6 40V50" class="ln" style="stroke:#f59e0b;stroke-width:1.4"/><path d="M30.2 40V50" class="ln" style="stroke:#f59e0b;stroke-width:1.4"/><path d="M32 45H116" class="ln" style="stroke:#38bdf8;stroke-width:4"/><polygon points="116,32 154,32 148,60 122,60" class="b"/><circle cx="124" cy="41" r="1.8" class="s"/><circle cx="131" cy="41" r="1.8" class="s"/><circle cx="138" cy="41" r="1.8" class="s"/><circle cx="145" cy="41" r="1.8" class="s"/><circle cx="152" cy="41" r="1.8" class="s"/><circle cx="127.5" cy="51" r="1.8" class="s"/><circle cx="134.5" cy="51" r="1.8" class="s"/><circle cx="141.5" cy="51" r="1.8" class="s"/><circle cx="148.5" cy="51" r="1.8" class="s"/><text x="20" y="74">RJ45</text><text x="135" y="74">DB9 (COM)</text></svg><figcaption><b>Rollover Cable</b><br>RJ45 ที่อุปกรณ์ ไปเป็นหัว DB9 ที่คอม (สายสีฟ้าอ่อนแบบที่ Cisco แถมมา)</figcaption></figure><figure><svg viewBox="0 0 160 90" role="img"><rect x="6" y="36" width="24" height="18" rx="2" class="b"/><rect x="10" y="41" width="16" height="8" rx="0" class="fe"/><path d="M30 45H66" class="ln" style="stroke:#38bdf8;stroke-width:4"/><rect x="66" y="36" width="28" height="18" rx="3" class="b"/><text x="80" y="48">USB-Serial</text><path d="M94 45H128" class="ln" style="stroke:#38bdf8;stroke-width:4"/><rect x="128" y="34" width="24" height="22" rx="2" class="b"/><path d="M132.0 40V50" class="ln" style="stroke:#f59e0b;stroke-width:1.4"/><path d="M134.6 40V50" class="ln" style="stroke:#f59e0b;stroke-width:1.4"/><path d="M137.2 40V50" class="ln" style="stroke:#f59e0b;stroke-width:1.4"/><path d="M139.8 40V50" class="ln" style="stroke:#f59e0b;stroke-width:1.4"/><path d="M142.4 40V50" class="ln" style="stroke:#f59e0b;stroke-width:1.4"/><path d="M145.0 40V50" class="ln" style="stroke:#f59e0b;stroke-width:1.4"/><path d="M147.6 40V50" class="ln" style="stroke:#f59e0b;stroke-width:1.4"/><path d="M150.2 40V50" class="ln" style="stroke:#f59e0b;stroke-width:1.4"/><text x="18" y="74">USB-A</text><text x="140" y="74">RJ45</text></svg><figcaption><b>USB Console Cable</b><br>มีชิป USB-Serial ในสาย เสียบ USB ของคอมได้เลย ต้องลงไดรเวอร์ (FTDI / Prolific / CH340)</figcaption></figure></div>
+
+            <h3 class="sub">ชนิดสาย Console</h3>
+            <table>
+            <tr><th>ชนิด</th><th>ปลายทางที่คอม</th><th>หมายเหตุ</th></tr>
+            <tr><td>RJ45 → DB9 (Rollover)</td><td>พอร์ต COM (RS-232)</td><td>โน้ตบุ๊กสมัยใหม่ไม่มีพอร์ต COM ต้องซื้อ USB-to-Serial Adapter เพิ่ม</td></tr>
+            <tr><td>RJ45 → USB</td><td>USB-A (หรือ USB-C)</td><td>สะดวกที่สุด เหมาะพกติดกระเป๋า แต่ต้องติดตั้งไดรเวอร์ตามชิปในสาย</td></tr>
+            <tr><td>USB Mini-B / Micro-B / USB-C → USB</td><td>USB</td><td>สำหรับรุ่นที่มีพอร์ต Console เป็น USB เสียบสาย USB ปกติ ไม่ต้องใช้สาย Rollover</td></tr>
+            </table>
+            <div class="note"><b>Pinout ของสาย Rollover:</b> ขาสลับกลับด้านทั้งหมด คือ 1↔8, 2↔7, 3↔6, 4↔5 (สายนี้ไม่ใช่สาย LAN ธรรมดา ห้ามนำมาต่อ Switch กับ PC แทนสาย LAN) ส่วนใหญ่ Cisco และ Huawei ใช้สายแบบเดียวกันได้ แต่บางรุ่นต่างกัน ให้ดูคู่มือรุ่นนั้นอีกครั้ง</div>
+
+            <h3 class="sub">ค่าที่ต้องตั้งในโปรแกรม Terminal</h3>
+            <table>
+            <tr><th>Speed (Baud)</th><th>Data bits</th><th>Parity</th><th>Stop bits</th><th>Flow control</th></tr>
+            <tr><td>9600</td><td>8</td><td>None</td><td>1</td><td>None</td></tr>
+            </table>
+            <p class="explain">เรียกสั้น ๆ ว่า <b>9600 8N1</b> ใช้เป็นค่าเริ่มต้นของ Cisco และ Huawei ส่วนใหญ่ แต่บางรุ่นใหม่ใช้ 115200 ถ้าตั้งแล้วตัวอักษรเพี้ยนให้ลองดูคู่มือรุ่นนั้นหรือเปลี่ยน Speed</p>
+
+            <h3 class="sub">ขั้นตอนต่อ Console</h3>
+            <table>
+            <tr><th>ขั้น</th><th>ทำอะไร</th></tr>
+            <tr><td>01</td><td>เสียบสายเข้าพอร์ต <b>Console</b> ของอุปกรณ์ แล้วเสียบอีกปลายเข้าคอม</td></tr>
+            <tr><td>02</td><td>หา COM Port: Windows ดูที่ Device Manager → Ports (COM &amp; LPT), Linux ใช้ <code>ls /dev/ttyUSB*</code>, macOS ใช้ <code>ls /dev/tty.usb*</code></td></tr>
+            <tr><td>03</td><td>เปิดโปรแกรม Terminal เช่น PuTTY, Tera Term, SecureCRT (Windows) หรือ screen / minicom (Linux, macOS)</td></tr>
+            <tr><td>04</td><td>เลือก Connection แบบ <b>Serial</b> ใส่ COM Port และ Speed 9600</td></tr>
+            <tr><td>05</td><td>กด Enter 1-2 ครั้ง ควรเห็น Prompt เช่น <code>Router&gt;</code> (Cisco) หรือ <code>&lt;Huawei&gt;</code></td></tr>
+            </table>
+            <div class="command-box"><h3>Linux / macOS - เข้า Console ด้วยคำสั่ง</h3>
+<pre>
+screen /dev/ttyUSB0 9600        # Linux
+screen /dev/tty.usbserial-XXXX 9600   # macOS
+minicom -D /dev/ttyUSB0 -b 9600
+
+# ออกจาก screen: กด Ctrl+A แล้วกด K แล้วกด y
+</pre></div>
+
+            <h3 class="sub">ตั้งรหัสผ่านให้พอร์ต Console</h3>
+            <div class="command-box"><h3>Cisco</h3>
+<pre>
+line console 0
+password cisco123
+login
+logging synchronous
+exec-timeout 10 0
+</pre></div>
+            <div class="command-box"><h3>Huawei</h3>
+<pre>
+system-view
+user-interface console 0
+authentication-mode password
+set authentication password cipher Huawei@123
+</pre></div>
+            <div class="note"><code>logging synchronous</code> ช่วยไม่ให้ข้อความ Log เด้งมาแทรกกลางคำสั่งที่กำลังพิมพ์ และ <code>exec-timeout</code> ตัดการเชื่อมต่อเมื่อไม่มีใครใช้งาน</div>
+
+            <h3 class="sub">ต่อ Console แล้วไม่ขึ้น แก้อย่างไร</h3>
+            <table>
+            <tr><th>อาการ</th><th>สาเหตุที่พบบ่อย</th><th>วิธีแก้</th></tr>
+            <tr><td>หน้าจอว่าง ไม่มีอะไรขึ้น</td><td>เลือก COM Port ผิด / เสียบผิดพอร์ต</td><td>เช็ก Device Manager, ตรวจว่าเสียบพอร์ต Console และกด Enter ซ้ำ</td></tr>
+            <tr><td>ตัวอักษรเพี้ยน อ่านไม่ออก</td><td>Speed ไม่ตรงกับอุปกรณ์</td><td>ลอง 9600 ก่อน แล้วลอง 115200</td></tr>
+            <tr><td>ไม่เห็น COM Port เลย</td><td>ยังไม่ได้ลงไดรเวอร์ หรือสายเสีย</td><td>ติดตั้งไดรเวอร์ FTDI / Prolific / CH340 ตามชิปของสาย ลองเปลี่ยนพอร์ต USB</td></tr>
+            <tr><td>เห็นข้อความแต่พิมพ์ไม่ได้</td><td>เปิด Flow control อยู่</td><td>ตั้ง Flow control เป็น None</td></tr>
+            <tr><td>เปิดพอร์ตไม่ได้ (Access denied)</td><td>มีโปรแกรมอื่นใช้ COM นั้นอยู่</td><td>ปิดโปรแกรม Terminal ตัวอื่นที่เปิดค้างไว้</td></tr>
+            </table>
+        </section>
+
+
+        <!-- UTP -->
+        <section id="utp" class="section">
+            <p class="label">08 / COPPER CABLE</p>
+            <h2>สาย LAN (UTP / Cat5 - Cat8)</h2>
+            <p class="explain">สาย LAN ทองแดงแบบบิดเกลียว (Twisted Pair) ส่งข้อมูลด้วยสัญญาณไฟฟ้า มีทั้งหมด 4 คู่ (8 เส้น) การบิดเกลียวช่วยลดสัญญาณรบกวน Category (Cat) ที่สูงขึ้นรองรับความถี่และความเร็วได้มากขึ้น ใช้ระยะสูงสุดมาตรฐานที่ <b>100 เมตร</b> ต่อ 1 ลิงก์ (สายเดินถาวรไม่เกิน 90 เมตร รวมสาย Patch Cord ปลายทางอีกไม่เกิน 10 เมตร)</p>
+            <div class="gal"><figure><svg viewBox="0 0 160 90" role="img"><rect x="36" y="20" width="72" height="50" rx="4" class="b"/><rect x="42" y="26" width="4" height="18" rx="0" class="s"/><rect x="50" y="26" width="4" height="18" rx="0" class="s"/><rect x="58" y="26" width="4" height="18" rx="0" class="s"/><rect x="66" y="26" width="4" height="18" rx="0" class="s"/><rect x="74" y="26" width="4" height="18" rx="0" class="s"/><rect x="82" y="26" width="4" height="18" rx="0" class="s"/><rect x="90" y="26" width="4" height="18" rx="0" class="s"/><rect x="98" y="26" width="4" height="18" rx="0" class="s"/><rect x="56" y="70" width="32" height="8" rx="2" class="b"/><rect x="108" y="32" width="34" height="26" rx="4" class="bt"/><text x="44" y="60">Pin 1</text><text x="100" y="60">Pin 8</text></svg><figcaption><b>หัว RJ45</b><br>มี 8 ขาสัมผัส (ทอง) ด้านหน้า หันก้านล็อกลงล่าง ขา 1 อยู่ซ้ายสุด</figcaption></figure><figure><svg viewBox="0 0 160 90" role="img"><circle cx="80" cy="42" r="36" class="b"/><circle cx="62.5" cy="29" r="4" style="fill:#3b82f6;stroke:#555;stroke-width:1"/><circle cx="71.5" cy="29" r="4" style="fill:#e5e7eb;stroke:#555;stroke-width:1"/><circle cx="88.5" cy="29" r="4" style="fill:#f59e0b;stroke:#555;stroke-width:1"/><circle cx="97.5" cy="29" r="4" style="fill:#e5e7eb;stroke:#555;stroke-width:1"/><circle cx="62.5" cy="55" r="4" style="fill:#22c55e;stroke:#555;stroke-width:1"/><circle cx="71.5" cy="55" r="4" style="fill:#e5e7eb;stroke:#555;stroke-width:1"/><circle cx="88.5" cy="55" r="4" style="fill:#92400e;stroke:#555;stroke-width:1"/><circle cx="97.5" cy="55" r="4" style="fill:#e5e7eb;stroke:#555;stroke-width:1"/></svg><figcaption><b>สาย UTP (U/UTP)</b><br>4 คู่สายบิดเกลียว (8 เส้น) ไม่มีฟอยล์หรือเปียกันสัญญาณรบกวน</figcaption></figure><figure><svg viewBox="0 0 160 90" role="img"><circle cx="80" cy="42" r="36" class="b"/><circle cx="80" cy="42" r="31" style="fill:none;stroke:currentColor;stroke-width:2;stroke-dasharray:1 2"/><circle cx="67" cy="29" r="10" style="fill:rgba(200,200,200,.35);stroke:currentColor;stroke-width:1;stroke-dasharray:2 2"/><circle cx="62.5" cy="29" r="4" style="fill:#3b82f6;stroke:#555;stroke-width:1"/><circle cx="71.5" cy="29" r="4" style="fill:#e5e7eb;stroke:#555;stroke-width:1"/><circle cx="93" cy="29" r="10" style="fill:rgba(200,200,200,.35);stroke:currentColor;stroke-width:1;stroke-dasharray:2 2"/><circle cx="88.5" cy="29" r="4" style="fill:#f59e0b;stroke:#555;stroke-width:1"/><circle cx="97.5" cy="29" r="4" style="fill:#e5e7eb;stroke:#555;stroke-width:1"/><circle cx="67" cy="55" r="10" style="fill:rgba(200,200,200,.35);stroke:currentColor;stroke-width:1;stroke-dasharray:2 2"/><circle cx="62.5" cy="55" r="4" style="fill:#22c55e;stroke:#555;stroke-width:1"/><circle cx="71.5" cy="55" r="4" style="fill:#e5e7eb;stroke:#555;stroke-width:1"/><circle cx="93" cy="55" r="10" style="fill:rgba(200,200,200,.35);stroke:currentColor;stroke-width:1;stroke-dasharray:2 2"/><circle cx="88.5" cy="55" r="4" style="fill:#92400e;stroke:#555;stroke-width:1"/><circle cx="97.5" cy="55" r="4" style="fill:#e5e7eb;stroke:#555;stroke-width:1"/></svg><figcaption><b>สาย S/FTP</b><br>ฟอยล์หุ้มแต่ละคู่สาย และมีเปียถักหุ้มรวมอีกชั้น ใช้ใน Cat7/Cat8</figcaption></figure></div>
+
+            <h3 class="sub">เปรียบเทียบ Category</h3>
+            <table>
+            <tr><th>Category</th><th>ความถี่</th><th>ความเร็วสูงสุด</th><th>แบบสาย</th><th>ใช้งาน</th></tr>
+            <tr><td>Cat5</td><td>100 MHz</td><td>100 Mbps</td><td>UTP</td><td>เลิกผลิตแล้ว พบในงานเก่า</td></tr>
+            <tr><td>Cat5e</td><td>100 MHz</td><td>1 Gbps (100 m)</td><td>UTP</td><td>สำนักงานและบ้านทั่วไป ราคาถูก</td></tr>
+            <tr><td>Cat6</td><td>250 MHz</td><td>1 Gbps (100 m), 10 Gbps ระยะสั้นประมาณ 37-55 m</td><td>UTP หรือ F/UTP</td><td>สายหนากว่า มักมีแกนกั้นคู่สาย ลดสัญญาณรบกวนระหว่างคู่</td></tr>
+            <tr><td>Cat6a</td><td>500 MHz</td><td>10 Gbps (100 m)</td><td>U/UTP, F/UTP หรือ S/FTP</td><td>Data Center, ลิงก์ Wi-Fi 6/7 Access Point</td></tr>
+            <tr><td>Cat7</td><td>600 MHz</td><td>10 Gbps (100 m)</td><td>S/FTP</td><td>เป็นมาตรฐาน ISO/IEC (TIA ไม่รับรอง) หุ้มชีลด์ทุกคู่ ในตลาดมักใช้หัว RJ45</td></tr>
+            <tr><td>Cat8</td><td>2000 MHz</td><td>25 / 40 Gbps (ไม่เกิน 30 m)</td><td>F/FTP หรือ S/FTP</td><td>เชื่อมระยะสั้น Switch ↔ Server ภายใน Rack หรือแถวเดียวกัน</td></tr>
+            </table>
+            <div class="note"><b>เลือกอย่างไร:</b> งานทั่วไปใช้ Cat5e/Cat6 พอ ถ้าวางแผนใช้ 10 Gbps ที่ระยะ 100 m ให้เลือก <b>Cat6a</b> ส่วน Cat7 ราคาแพงกว่าแต่ความเร็วที่ใช้จริงเท่า Cat6a จึงไม่ค่อยคุ้ม ขณะที่ Cat8 เหมาะเฉพาะ Data Center ความเร็วที่ได้ขึ้นกับพอร์ตของอุปกรณ์ด้วย ไม่ใช่ที่สายอย่างเดียว</div>
+
+            <h3 class="sub">ชื่อชนิดสาย (U/UTP, F/UTP, S/FTP)</h3>
+            <p class="explain">รูปแบบ <b>X/YTP</b>: X = ชีลด์ที่หุ้มรวมทั้งเส้น (U = ไม่มี, F = ฟอยล์, S = เปียถัก) ส่วน Y = ชีลด์ของแต่ละคู่สาย (U = ไม่มี, F = ฟอยล์)</p>
+            <table>
+            <tr><th>ชนิด</th><th>โครงสร้าง</th><th>ใช้เมื่อ</th></tr>
+            <tr><td>U/UTP (UTP)</td><td>ไม่มีชีลด์</td><td>ออฟฟิศทั่วไป สัญญาณรบกวนน้อย</td></tr>
+            <tr><td>F/UTP</td><td>ฟอยล์หุ้มรวมทั้งเส้น</td><td>โรงงาน หรือเดินใกล้อุปกรณ์ไฟฟ้า</td></tr>
+            <tr><td>S/FTP</td><td>ฟอยล์หุ้มทุกคู่ + เปียถักหุ้มรวม</td><td>Cat7, Cat8, Data Center (ต้องต่อสายดินที่ชีลด์ และใช้หัว/แจ็คแบบชีลด์)</td></tr>
+            </table>
+
+            <h3 class="sub">การเข้าหัว RJ45 (T568A / T568B)</h3>
+            <table>
+            <tr><th>Pin</th><th>T568A</th><th>T568B (นิยมใช้ที่สุด)</th></tr>
+            <tr><td>1</td><td>ขาวเขียว</td><td>ขาวส้ม</td></tr>
+            <tr><td>2</td><td>เขียว</td><td>ส้ม</td></tr>
+            <tr><td>3</td><td>ขาวส้ม</td><td>ขาวเขียว</td></tr>
+            <tr><td>4</td><td>น้ำเงิน</td><td>น้ำเงิน</td></tr>
+            <tr><td>5</td><td>ขาวน้ำเงิน</td><td>ขาวน้ำเงิน</td></tr>
+            <tr><td>6</td><td>ส้ม</td><td>เขียว</td></tr>
+            <tr><td>7</td><td>ขาวน้ำตาล</td><td>ขาวน้ำตาล</td></tr>
+            <tr><td>8</td><td>น้ำตาล</td><td>น้ำตาล</td></tr>
+            </table>
+            <table>
+            <tr><th>ชนิดสาย</th><th>การเข้าหัว</th><th>ใช้ต่อ</th></tr>
+            <tr><td>Straight-through</td><td>ทั้งสองปลายใช้มาตรฐานเดียวกัน (B-B หรือ A-A)</td><td>PC ↔ Switch, Switch ↔ Router</td></tr>
+            <tr><td>Crossover</td><td>ปลายหนึ่ง A อีกปลายหนึ่ง B</td><td>อุปกรณ์ชนิดเดียวกัน เช่น PC ↔ PC, Switch ↔ Switch รุ่นเก่า</td></tr>
+            </table>
+            <div class="note">อุปกรณ์สมัยใหม่ส่วนใหญ่มี <b>Auto MDI-X</b> ปรับขาส่ง-รับให้เอง ใช้สาย Straight-through ต่อได้เกือบทุกกรณี ส่วน 10/100 Mbps ใช้เพียงคู่ที่ 1-2 กับ 3-6 (Pin 1, 2, 3, 6) แต่ 1 Gbps ขึ้นไปใช้ครบ <b>ทั้ง 4 คู่</b> ถ้าเข้าหัวผิดหรือเส้นเสีย Link มักตกลงมาเหลือ 100 Mbps</div>
+
+            <h3 class="sub">PoE (จ่ายไฟผ่านสาย LAN)</h3>
+            <table>
+            <tr><th>มาตรฐาน</th><th>กำลังไฟสูงสุดจากอุปกรณ์จ่าย</th><th>ใช้กับ</th></tr>
+            <tr><td>802.3af (PoE)</td><td>15.4 W</td><td>IP Phone, กล้องทั่วไป</td></tr>
+            <tr><td>802.3at (PoE+)</td><td>30 W</td><td>Wi-Fi AP, กล้อง PTZ</td></tr>
+            <tr><td>802.3bt (PoE++)</td><td>60 W / 90-100 W</td><td>AP รุ่นสูง, จอแสดงผล, ไฟ LED</td></tr>
+            </table>
+
+            <h3 class="sub">ข้อควรรู้ตอนซื้อและเดินสาย</h3>
+            <div class="note">
+            <b>เลือกสายทองแดงแท้ 100%:</b> หลีกเลี่ยงสาย CCA (ทองแดงเคลือบอะลูมิเนียม) ที่ราคาถูกแต่ความต้านทานสูง ลิงก์ไม่เสถียรและ PoE ร้อนจนเสียหาย<br>
+            <b>Solid vs Stranded:</b> สายแกนเดี่ยว (Solid) ใช้เดินในผนัง/ฝ้า ส่วนสายแกนฝอย (Stranded) ใช้เป็น Patch Cord เพราะงอได้ดี<br>
+            <b>ห้ามหักงอ:</b> รัศมีโค้งไม่ควรน้อยกว่าประมาณ 4 เท่าของเส้นผ่านศูนย์กลางสาย และไม่ควรเดินขนานชิดสายไฟ AC<br>
+            <b>เครื่องมือ:</b> คีมเข้าหัว (Crimper), Cable Tester ตรวจครบ 8 เส้น, Tone Generator หาปลายสาย, Certifier (เช่น Fluke) ตรวจตามมาตรฐาน Cat
+            </div>
+
+            <div class="command-box"><h3>ตรวจสถานะลิงก์และคุณภาพสาย</h3>
+<pre>
+! Cisco
+show interfaces status
+show interfaces gigabitEthernet 0/1      ! ดู CRC / input errors
+test cable-diagnostics tdr interface gigabitEthernet 0/1
+show cable-diagnostics tdr interface gigabitEthernet 0/1
+
+! Huawei
+display interface GigabitEthernet 0/0/1
+virtual-cable-test                       ! ใน interface view
+</pre></div>
+            <p class="explain">คำสั่ง TDR / virtual-cable-test ใช้ได้เฉพาะบางรุ่น ผลที่ได้ช่วยบอกว่าสายขาด/ช็อตที่ระยะประมาณกี่เมตร</p>
+
+            <h3 class="sub">ปัญหาสาย LAN ที่พบบ่อย</h3>
+            <table>
+            <tr><th>อาการ</th><th>สาเหตุที่พบบ่อย</th><th>วิธีแก้</th></tr>
+            <tr><td>Link ขึ้นแค่ 100 Mbps</td><td>สาย Cat5, เข้าหัวผิดหรือเส้นขาดบางคู่</td><td>เปลี่ยนเป็น Cat5e ขึ้นไป เข้าหัวใหม่ ตรวจด้วย Cable Tester</td></tr>
+            <tr><td>CRC / input errors เพิ่มขึ้นเรื่อย ๆ</td><td>สายชำรุด สัญญาณรบกวน หรือยาวเกิน 100 m</td><td>เปลี่ยนสาย ใช้สายชีลด์ ย้ายออกจากสายไฟ</td></tr>
+            <tr><td>Link ขึ้น ๆ ดับ ๆ (flap)</td><td>หัวหลวม ก้านล็อกหัก ขาสัมผัสเสีย</td><td>เข้าหัวใหม่ หรือเปลี่ยน Patch Cord</td></tr>
+            <tr><td>PoE ไม่ทำงาน / อุปกรณ์รีสตาร์ทเอง</td><td>สาย CCA, ยาวเกิน หรือกำลังไฟ Switch ไม่พอ</td><td>ใช้สายทองแดงแท้ ตรวจโควตา PoE ของ Switch</td></tr>
+            <tr><td>ไม่มี Link เลย</td><td>สายขาด ต่อผิดพอร์ต พอร์ตถูก shutdown</td><td>ตรวจสาย, <code>show interfaces status</code>, สั่ง <code>no shutdown</code></td></tr>
+            </table>
+        </section>
+
+
+        <!-- Fiber Optic -->
+        <section id="fiber" class="section">
+            <p class="label">09 / FIBER OPTIC</p>
+            <h2>สายไฟเบอร์ออปติก</h2>
+            <p class="explain">ไฟเบอร์ส่งข้อมูลด้วย <b>แสง</b> ผ่านแกนแก้ว จึงส่งได้ไกล ความเร็วสูง และไม่โดนสัญญาณรบกวนทางไฟฟ้า ใช้เชื่อมระหว่างอาคาร ห้อง Server และลิงก์ Core Switch การเลือกสายให้ถูกชนิด หัวต่อ และโมดูลเป็นเรื่องสำคัญที่สุด</p>
+
+            <h3 class="sub">Single-mode vs Multi-mode</h3>
+            <table>
+            <tr><th>หัวข้อ</th><th>Single-mode (SMF)</th><th>Multi-mode (MMF)</th></tr>
+            <tr><td>ขนาดแกน (Core)</td><td>9 µm (เล็กมาก)</td><td>50 µm หรือ 62.5 µm</td></tr>
+            <tr><td>แหล่งกำเนิดแสง</td><td>Laser, 1310 / 1550 nm</td><td>LED / VCSEL, 850 nm (บางแบบ 1300 nm)</td></tr>
+            <tr><td>ระยะทาง</td><td>หลาย km ถึงหลายสิบ km</td><td>หลักสิบถึงไม่กี่ร้อยเมตร</td></tr>
+            <tr><td>ราคาสาย / โมดูล</td><td>สายถูกกว่า แต่โมดูลแพงกว่า</td><td>สายแพงกว่า แต่โมดูลถูกกว่า</td></tr>
+            <tr><td>สีเปลือกสาย</td><td>เหลือง</td><td>ส้ม, ฟ้า (Aqua), เขียวมะนาว (OM5)</td></tr>
+            <tr><td>ใช้กับ</td><td>ข้ามอาคาร, ISP, FTTH, WAN</td><td>ภายในอาคาร, Data Center</td></tr>
+            </table>
+
+            <h3 class="sub">เทียบหน้าตัดสาย</h3>
+<div class="gal"><figure><svg viewBox="0 0 160 90" role="img"><circle cx="45" cy="34" r="30" class="b"/><circle cx="45" cy="34" r="2.5" class="p"/><circle cx="115" cy="34" r="30" class="b"/><circle cx="115" cy="34" r="12" class="p"/><text x="45" y="76">SM Core 9 µm</text><text x="115" y="76">MM Core 50 µm</text><text x="80" y="12">Cladding 125 µm</text></svg><figcaption><b>หน้าตัดสายไฟเบอร์</b><br>Single-mode แกนเล็กมาก (9 µm) Multi-mode แกนใหญ่กว่า (50 µm) แต่ขนาดรวมเปลือกแก้วเท่ากัน คือ 125 µm</figcaption></figure></div>
+<h3 class="sub">เกรดของสาย (OS / OM)</h3>
+            <table>
+            <tr><th>เกรด</th><th>ชนิด / สี</th><th>1G</th><th>10G</th><th>40/100G</th></tr>
+            <tr><td>OS1 / OS2</td><td>Single-mode, เหลือง (OS2 = นอกอาคาร สูญเสียต่ำกว่า)</td><td colspan="3">หลาย km ถึง 10 km+ ขึ้นกับโมดูล</td></tr>
+            <tr><td>OM1</td><td>62.5 µm, ส้ม</td><td>275 m</td><td>33 m</td><td>ไม่รองรับ</td></tr>
+            <tr><td>OM2</td><td>50 µm, ส้ม</td><td>550 m</td><td>82 m</td><td>ไม่รองรับ</td></tr>
+            <tr><td>OM3</td><td>50 µm, Aqua</td><td>550 m</td><td>300 m</td><td>100 m</td></tr>
+            <tr><td>OM4</td><td>50 µm, Aqua</td><td>550 m</td><td>400 m</td><td>150 m</td></tr>
+            <tr><td>OM5</td><td>50 µm, เขียวมะนาว</td><td colspan="3">เหมือน OM4 และรองรับหลายความยาวคลื่น (SWDM) เพิ่มความเร็วบนสายเดิม</td></tr>
+            </table>
+            <div class="note">ระยะในตารางเป็นค่ามาตรฐานโดยประมาณ ระยะจริงขึ้นกับโมดูลและคุณภาพการเข้าหัว งานใหม่ในอาคารนิยมเดิน <b>OM3/OM4</b> หรือ <b>OS2</b></div>
+
+            <h3 class="sub">หัวต่อ (Connector)</h3>
+            <table>
+            <tr><th>หัวต่อ</th><th>ลักษณะ</th><th>พบใช้ที่</th></tr>
+            <tr><td>LC</td><td>เล็ก ล็อกด้วยก้านกด (Duplex เป็นคู่)</td><td>โมดูล SFP/SFP+ พบบ่อยที่สุดในปัจจุบัน</td></tr>
+            <tr><td>SC</td><td>สี่เหลี่ยม ดันเข้า-ดึงออก (Push-Pull)</td><td>กล่อง ODF, FTTH, อุปกรณ์รุ่นเก่า</td></tr>
+            <tr><td>ST</td><td>กลม บิดล็อก (Bayonet)</td><td>งานเก่า, Multi-mode ในอาคาร</td></tr>
+            <tr><td>FC</td><td>กลม ขันเกลียว</td><td>เครื่องมือวัด, งาน Telecom</td></tr>
+            <tr><td>MPO / MTP</td><td>หัวเดียวรวม 12 หรือ 24 แกน</td><td>40G / 100G, Data Center</td></tr>
+            </table>
+            <p class="explain"><b>UPC vs APC:</b> หัว UPC (ปลอกสีฟ้า) ขัดปลายเรียบ ส่วนหัว APC (ปลอกสีเขียว) ขัดปลายเอียง 8° เพื่อลดแสงสะท้อนกลับ นิยมใช้กับ FTTH/CATV <b>ห้ามนำ APC ไปต่อกับ UPC</b> เพราะปลายหัวไม่แนบสนิท ทำให้สัญญาณเสียหรือหัวเสียหาย</p>
+
+            <div class="gal"><figure><svg viewBox="0 0 160 90" role="img"><rect x="14" y="41" width="28" height="8" rx="0" class="fe"/><rect x="42" y="32" width="64" height="26" rx="3" class="b"/><polygon points="52,32 100,32 110,22 62,22" class="b"/><rect x="118" y="38" width="26" height="14" rx="3" class="bt"/></svg><figcaption><b>LC</b><br>ตัวเล็ก มีก้านล็อกด้านบน ใช้กับโมดูล SFP</figcaption></figure><figure><svg viewBox="0 0 160 90" role="img"><rect x="14" y="41" width="28" height="8" rx="0" class="fe"/><rect x="42" y="28" width="72" height="34" rx="2" class="b"/><rect x="50" y="35" width="56" height="20" rx="2" class="b"/><rect x="118" y="38" width="26" height="14" rx="3" class="bt"/></svg><figcaption><b>SC</b><br>ตัวเหลี่ยม ดันเข้า-ดึงออก ใช้กับ ODF และ FTTH</figcaption></figure><figure><svg viewBox="0 0 160 90" role="img"><rect x="14" y="41" width="28" height="8" rx="0" class="fe"/><rect x="42" y="34" width="50" height="22" rx="11" class="b"/><rect x="92" y="32" width="24" height="26" rx="2" class="b"/><circle cx="66" cy="31" r="3" class="s"/><circle cx="66" cy="59" r="3" class="s"/><rect x="118" y="38" width="26" height="14" rx="3" class="bt"/></svg><figcaption><b>ST</b><br>หัวกลม บิดล็อกด้วยเดือย (Bayonet) พบในงานเก่า</figcaption></figure><figure><svg viewBox="0 0 160 90" role="img"><rect x="14" y="41" width="28" height="8" rx="0" class="fe"/><rect x="42" y="30" width="40" height="30" rx="2" class="b"/><path d="M46 30V60" class="ln" style="stroke-width:1"/><path d="M51 30V60" class="ln" style="stroke-width:1"/><path d="M56 30V60" class="ln" style="stroke-width:1"/><path d="M61 30V60" class="ln" style="stroke-width:1"/><path d="M66 30V60" class="ln" style="stroke-width:1"/><path d="M71 30V60" class="ln" style="stroke-width:1"/><path d="M76 30V60" class="ln" style="stroke-width:1"/><rect x="82" y="34" width="28" height="22" rx="2" class="b"/><rect x="118" y="38" width="26" height="14" rx="3" class="bt"/></svg><figcaption><b>FC</b><br>หัวกลม ขันเกลียว ทนแรงสั่น ใช้กับเครื่องมือวัด</figcaption></figure><figure><svg viewBox="0 0 160 90" role="img"><rect x="28" y="26" width="104" height="38" rx="4" class="b"/><circle cx="38" cy="45" r="4" class="s"/><circle cx="122" cy="45" r="4" class="s"/><circle cx="50.0" cy="45" r="1.8" class="p"/><circle cx="55.5" cy="45" r="1.8" class="p"/><circle cx="61.0" cy="45" r="1.8" class="p"/><circle cx="66.5" cy="45" r="1.8" class="p"/><circle cx="72.0" cy="45" r="1.8" class="p"/><circle cx="77.5" cy="45" r="1.8" class="p"/><circle cx="83.0" cy="45" r="1.8" class="p"/><circle cx="88.5" cy="45" r="1.8" class="p"/><circle cx="94.0" cy="45" r="1.8" class="p"/><circle cx="99.5" cy="45" r="1.8" class="p"/><circle cx="105.0" cy="45" r="1.8" class="p"/><circle cx="110.5" cy="45" r="1.8" class="p"/></svg><figcaption><b>MPO / MTP</b><br>มองจากด้านหน้า แถวไฟเบอร์ 12 แกนในหัวเดียว มีเดือยนำ 2 จุด</figcaption></figure><figure><svg viewBox="0 0 160 90" role="img"><path d="M8 30H62V60H8Z" class="b"/><path d="M92 30H140L146 60H92Z" class="b"/><path d="M10 45H62" class="ln" style="stroke:#3b82f6"/><path d="M60 41H12" class="dash"/><path d="M94 45H143" class="ln" style="stroke:#22c55e"/><path d="M141 45L120 20" class="dash"/><text x="35" y="76">UPC (ฟ้า)</text><text x="120" y="76">APC 8° (เขียว)</text></svg><figcaption><b>ปลายหัว UPC vs APC</b><br>UPC ขัดเรียบ แสงสะท้อนกลับตรง ๆ ส่วน APC ขัดเอียง 8° แสงสะท้อนหลุดเข้าเปลือกแทน</figcaption></figure></div>
+<figure class="pic">
+<img src="fiber-connectors.jpg" alt="ตัวอย่างหัวต่อไฟเบอร์จริง LC, SC, FC, ST และ D4 ทั้งแบบ SM, MM, UPC และ APC" loading="lazy">
+<figcaption>ตัวอย่างหัวต่อไฟเบอร์จริง (LC, SC, FC, ST, D4)</figcaption>
+</figure>
+<div class="note"><b>อ่านรหัสใต้ภาพ เช่น <code>LC/SM/SX/3.0</code>:</b> ชนิดหัว / ชนิดสาย (SM = Single-mode, MM = Multi-mode) / SX = Simplex (เส้นเดียว), DX = Duplex (คู่) / ขนาดเส้นผ่านศูนย์กลางสายเป็น mm (0.9, 2.0, 3.0)<br>
+<b>PC / UPC / APC:</b> ชนิดการขัดปลายหัว (APC คือปลายเอียง)<br>
+<b>สีของหัวและปลอกบอกชนิดได้คร่าว ๆ:</b> ฟ้า = Single-mode (UPC), เขียว = APC, เบจ/เทา = Multi-mode</div>
+
+<h3 class="sub">ประเภทสายที่พบ</h3>
+            <div class="topics">
+            <article><h3>Patch Cord</h3><p>สายสั้นเข้าหัวสำเร็จทั้งสองด้าน ใช้ต่อ Switch กับ ODF ชนิด Simplex (1 แกน) หรือ Duplex (2 แกน คือส่งและรับ)</p><code>LC-LC Duplex OM3 3m</code></article>
+            <article><h3>Pigtail</h3><p>สายที่มีหัวด้านเดียว อีกด้านเป็นปลายเปล่า ใช้ต่อเข้ากับสายเดินด้วยการเชื่อม (Fusion Splice)</p><code>SC/UPC Pigtail SM</code></article>
+            <article><h3>สายเดินภายนอก</h3><p>Loose-tube กันน้ำ, Armored กันหนูกัด/ฝังดิน, ADSS เดินบนเสาไฟฟ้า ส่วน Drop Cable ใช้เข้าบ้านลูกค้า FTTH</p><code>12 Core / 24 Core / 48 Core</code></article>
+            <article><h3>สายในอาคาร</h3><p>Tight-buffer เปลือกไม่ลามไฟ (LSZH/Riser) เหมาะเดินในท่อร้อยสายหรือรางภายในอาคาร</p><code>Indoor Tight Buffer</code></article>
+            </div>
+
+            <h3 class="sub">โมดูล SFP / Transceiver</h3>
+            <p class="explain">โมดูลคือตัวแปลงสัญญาณไฟฟ้าเป็นแสง เสียบในช่อง Switch/Router ต้องเลือกให้ตรงกับ <b>ความเร็ว ชนิดสาย และความยาวคลื่น</b></p>
+            <table>
+            <tr><th>ชนิดโมดูล</th><th>ความเร็ว</th><th>สาย</th><th>ระยะ</th></tr>
+            <tr><td>1000BASE-SX (SFP)</td><td>1G</td><td>MMF 850 nm</td><td>550 m</td></tr>
+            <tr><td>1000BASE-LX (SFP)</td><td>1G</td><td>SMF 1310 nm</td><td>10 km</td></tr>
+            <tr><td>10GBASE-SR (SFP+)</td><td>10G</td><td>MMF 850 nm</td><td>300–400 m</td></tr>
+            <tr><td>10GBASE-LR (SFP+)</td><td>10G</td><td>SMF 1310 nm</td><td>10 km</td></tr>
+            <tr><td>10GBASE-ER / ZR</td><td>10G</td><td>SMF 1550 nm</td><td>40 km / 80 km</td></tr>
+            <tr><td>QSFP+ / QSFP28</td><td>40G / 100G</td><td>MPO (MMF) หรือ LC (SMF)</td><td>ขึ้นกับรุ่น</td></tr>
+            </table>
+            <div class="note"><b>BiDi (สายเส้นเดียว):</b> ใช้ไฟเบอร์เพียง 1 เส้น โดยส่งและรับคนละความยาวคลื่น (เช่น 1310/1550) ต้องซื้อโมดูลเป็น <b>คู่ที่ตรงกัน</b> ไม่ใช้โมดูลชนิดเดียวกันสองฝั่ง</div>
+
+            <div class="gal"><figure><svg viewBox="0 0 160 90" role="img"><rect x="26" y="24" width="100" height="42" rx="3" class="b"/><circle cx="44" cy="40" r="6" class="b"/><circle cx="64" cy="40" r="6" class="b"/><text x="44" y="60">Tx</text><text x="64" y="60">Rx</text><circle cx="140" cy="45" r="9" class="ln"/><rect x="100" y="30" width="20" height="30" rx="2" class="s"/></svg><figcaption><b>โมดูล SFP</b><br>ด้านหน้ามีรู Tx / Rx อย่างละหนึ่ง ด้านท้ายมีก้านล็อก (Bail) เสียบเข้าช่อง SFP ของ Switch</figcaption></figure></div>
+<div class="command-box"><h3>ตรวจสถานะโมดูลและกำลังแสง</h3>
+<pre>
+! Cisco
+show interfaces transceiver detail
+show interfaces status
+
+! Huawei
+display transceiver interface GigabitEthernet 0/0/1 verbose
+</pre></div>
+            <p class="explain">ดูค่า <b>Rx Power</b> (กำลังแสงที่รับ) หน่วย dBm เทียบกับค่า Sensitivity ของโมดูล ถ้า Rx ต่ำใกล้ขีดจำกัดหรือไม่มีค่า แปลว่าสายมีปัญหาหรือสูญเสียมากเกินไป</p>
+
+            <h3 class="sub">Link ไฟเบอร์ไม่ขึ้น ตรวจอะไรบ้าง</h3>
+            <table>
+            <tr><th>สาเหตุ</th><th>วิธีตรวจ / แก้</th></tr>
+            <tr><td>Tx / Rx สลับกัน</td><td>Tx ฝั่งหนึ่งต้องต่อเข้า Rx อีกฝั่ง ลองสลับสายคู่ Duplex</td></tr>
+            <tr><td>ชนิดสายไม่ตรงกับโมดูล</td><td>โมดูล SX ต้องใช้ MMF, โมดูล LX/LR ต้องใช้ SMF</td></tr>
+            <tr><td>ความยาวคลื่น/ความเร็วไม่ตรงกัน</td><td>โมดูลสองฝั่งต้องชนิดเดียวกัน (BiDi ต้องเป็นคู่)</td></tr>
+            <tr><td>หัวสกปรก</td><td>เช็ดด้วยปากกาทำความสะอาดไฟเบอร์ หรือแผ่นเช็ดเฉพาะ อย่าใช้นิ้วจับปลายหัว</td></tr>
+            <tr><td>สายหักงอหรือชำรุด</td><td>ห้ามโค้งหักเกินรัศมีที่กำหนด ใช้ Visual Fault Locator (VFL) ดูจุดแสงรั่ว</td></tr>
+            <tr><td>ระยะไกล / Loss สูงเกิน</td><td>ใช้ Power Meter วัด หรือ OTDR หาตำแหน่งจุดเสีย</td></tr>
+            </table>
+            <div class="note"><b>Loss Budget โดยประมาณ:</b> สาย Single-mode ประมาณ 0.35 dB/km (1310 nm), หัวต่อ 1 จุดประมาณ 0.5 dB, จุดเชื่อม (Splice) ประมาณ 0.1 dB รวม Loss ทั้งลิงก์ต้องไม่เกินค่าที่โมดูลรองรับ<br>
+            <b>ความปลอดภัย:</b> แสงเลเซอร์ในไฟเบอร์มองไม่เห็นและอันตรายต่อดวงตา ห้ามมองเข้าไปในปลายสายหรือพอร์ตขณะอุปกรณ์เปิดอยู่</div>
+        </section>
+
+
+        <!-- Troubleshooting -->
+        <section id="troubleshooting" class="section">
+
+            <p class="label">
+                10 / TROUBLESHOOTING
+            </p>
+
+            <h2>
+                PC Ping Gateway ไม่ได้
+            </h2>
+
+
+            <div class="steps">
+
+                <div>
+                    <b>01</b>
+                    <h3>
+                        Physical
+                    </h3>
+
+                    <p>
+                        ตรวจสาย LAN
+                        และ Link
+                    </p>
+                </div>
+
+
+                <div>
+                    <b>02</b>
+
+                    <h3>
+                        IP Address
+                    </h3>
+
+                    <p>
+                        ตรวจ IP
+                        และ Subnet Mask
+                    </p>
+                </div>
+
+
+                <div>
+                    <b>03</b>
+
+                    <h3>
+                        Gateway
+                    </h3>
+
+                    <p>
+                        ตรวจ Default Gateway
+                    </p>
+                </div>
+
+
+                <div>
+                    <b>04</b>
+
+                    <h3>
+                        VLAN
+                    </h3>
+
+                    <p>
+                        ตรวจ Access VLAN
+                        และ Trunk
+                    </p>
+                </div>
+
+
+                <div>
+                    <b>05</b>
+
+                    <h3>
+                        Routing
+                    </h3>
+
+                    <p>
+                        ตรวจ Routing Table
+                    </p>
+                </div>
+
+            </div>
+
+        
+<p class="explain">แนวคิดคือเริ่มจาก Layer 1 ไล่ขึ้นไป อย่าเดา ให้ตรวจทีละชั้นด้วยคำสั่งจริง</p>
+<table>
+<tr><th>ขั้น</th><th>ตรวจอะไร</th><th>คำสั่ง</th><th>อาการที่พบ</th></tr>
+<tr><td>01 Physical</td><td>สาย, ไฟ Link</td><td>show ip interface brief</td><td>down/down = สายหลุดหรือเสีย, administratively down = ยังไม่ได้ no shutdown</td></tr>
+<tr><td>02 IP</td><td>IP, Mask ของ PC</td><td>ipconfig /all</td><td>169.254.x.x = ไม่ได้ DHCP, Mask ผิดทำให้เห็น Gateway ไม่ได้</td></tr>
+<tr><td>03 Gateway</td><td>Default Gateway</td><td>ping [gateway], arp -a</td><td>Gateway ต้องตรงกับ IP ของ Router/L3 ใน Subnet เดียวกัน</td></tr>
+<tr><td>04 VLAN</td><td>VLAN ของพอร์ต, Trunk</td><td>show vlan brief, show interfaces trunk</td><td>พอร์ตอยู่ผิด VLAN หรือ Trunk ไม่ allow VLAN</td></tr>
+<tr><td>05 Routing</td><td>Route ไปและกลับ</td><td>show ip route, traceroute</td><td>ไม่มี Route ปลายทาง หรือฝั่งตรงข้ามไม่มี Route กลับ</td></tr>
+</table>
+<div class="note"><b>แปลผล ping:</b> <i>Request timed out</i> = ไม่มีคำตอบ (เช่น ปลายทางปิดหรือ ACL ตัด ICMP), <i>Destination host unreachable</i> = Router ไม่รู้เส้นทาง<br>
+ping IP ได้แต่ชื่อเว็บไม่ได้ = ปัญหา DNS</div>
+
+        <h3 class="sub">กรณีศึกษา: ไล่ปัญหาทีละขั้น</h3>
+<details class="lab"><summary>PC ได้ IP ขึ้นต้น 169.254.x.x (ไม่ได้ IP จาก DHCP)</summary>
+<p><b>ไล่ตรวจตามลำดับ:</b></p>
+<ol><li>ตรวจสายและไฟ Link ของพอร์ต (<code>show ip interface brief</code>)</li><li>ตรวจว่าพอร์ตอยู่ VLAN ถูกต้อง (<code>show vlan brief</code>)</li><li>ตรวจว่า DHCP Server ถึงได้ (ลอง ping จาก Switch/Router ที่ Subnet เดียวกัน)</li><li>ถ้า DHCP Server อยู่ต่าง VLAN ตรวจว่ามี <code>ip helper-address</code> บน Gateway</li><li>ดูว่า Pool หมดหรือไม่ (<code>show ip dhcp binding</code> และ <code>show ip dhcp pool</code>)</li></ol>
+<p><b>สาเหตุที่พบบ่อย:</b> อยู่ผิด VLAN, Pool เต็ม, ลืม Relay, Trunk ไม่ allow VLAN นั้น</p>
+</details>
+<details class="lab"><summary>ใช้งานภายในได้ แต่ออกอินเทอร์เน็ตไม่ได้</summary>
+<p><b>ไล่ตรวจตามลำดับ:</b></p>
+<ol><li>ping Default Gateway ได้หรือไม่ (ถ้าไม่ได้ ย้อนไปดู Layer 1-3 ภายใน)</li><li>ping 8.8.8.8 (IP ตรง ๆ) ได้หรือไม่</li><li>ถ้า ping IP ไม่ได้: ตรวจ Default Route (<code>show ip route | include 0.0.0.0</code>), NAT (<code>show ip nat translations</code>) และสาย/ลิงก์ ISP</li><li>ถ้า ping IP ได้แต่เปิดชื่อเว็บไม่ได้: ปัญหา DNS ตรวจ DNS ที่เครื่องได้รับ (<code>nslookup google.com</code>)</li><li>ตรวจ ACL ที่อาจบล็อกขาออก</li></ol>
+<p><b>สาเหตุที่พบบ่อย:</b> ไม่มี Default Route, ลืมกำหนด ip nat inside/outside, ACL ของ NAT ไม่ครอบคลุม Subnet, DNS ผิด</p>
+</details>
+<details class="lab"><summary>VLAN เดียวกันแต่อยู่คนละ Switch คุยกันไม่ได้</summary>
+<p><b>ไล่ตรวจตามลำดับ:</b></p>
+<ol><li>ตรวจว่ามี VLAN นั้นอยู่ในทั้งสอง Switch (<code>show vlan brief</code>)</li><li>ตรวจพอร์ตของ PC ว่าเป็น access และอยู่ VLAN ถูกต้อง</li><li>ตรวจ Trunk (<code>show interfaces trunk</code>): VLAN ต้องอยู่ใน Allowed และ Active</li><li>ตรวจว่าทั้งสองฝั่งเป็น Trunk และ Native VLAN ตรงกัน</li><li>ตรวจ IP/Mask ของ PC ว่าอยู่ Subnet เดียวกัน</li></ol>
+<p><b>สาเหตุที่พบบ่อย:</b> ลืมสร้าง VLAN บน Switch อีกตัว, Trunk ไม่ allow VLAN, ปลายหนึ่ง Trunk อีกปลาย Access</p>
+</details>
+<details class="lab"><summary>OSPF Neighbor ไม่ขึ้น หรือค้างที่ Init / ExStart</summary>
+<p><b>ไล่ตรวจตามลำดับ:</b></p>
+<ol><li>ping ถึงกันได้บนลิงก์หรือไม่ (Layer 1-3)</li><li>Subnet และ Mask ของลิงก์ตรงกันหรือไม่</li><li>Area ตรงกัน และ <code>network</code> ครอบคลุม Interface นั้นจริง (<code>show ip ospf interface brief</code>)</li><li>Hello/Dead Timer ตรงกัน และไม่มี ACL บล็อก OSPF</li><li>Router ID ไม่ซ้ำ และไม่ได้ตั้ง <code>passive-interface</code> บนลิงก์ที่ต้องคุยกัน</li><li>ถ้าค้าง ExStart/Exchange ให้ตรวจ MTU ของสองฝั่ง</li></ol>
+<p><b>สาเหตุที่พบบ่อย:</b> Mask ไม่ตรง, Area ไม่ตรง, Router ID ซ้ำ, passive-interface ผิดพอร์ต, MTU ไม่ตรง</p>
+</details>
+
+        </section>
+
+
+        <!-- Labs -->
+        <section id="labs" class="section">
+
+            <p class="label">
+                11 / HANDS-ON LABS
+            </p>
+
+            <h2>
+                Network Labs
+            </h2>
+
+
+            <div class="labs">
+
+                <div>
+                    <span>LAB 01</span>
+                    <h3>
+                        Basic Network
+                    </h3>
+
+                    <p>
+                        PC → Switch → PC
+                    </p>
+                </div>
+
+
+                <div>
+                    <span>LAB 02</span>
+
+                    <h3>
+                        VLAN + Trunk
+                    </h3>
+
+                    <p>
+                        VLAN 10 / VLAN 20
+                    </p>
+                </div>
+
+
+                <div>
+                    <span>LAB 03</span>
+
+                    <h3>
+                        Inter-VLAN Routing
+                    </h3>
+
+                    <p>
+                        Router-on-a-Stick
+                    </p>
+                </div>
+
+
+                <div>
+                    <span>LAB 04</span>
+
+                    <h3>
+                        Static Routing
+                    </h3>
+
+                    <p>
+                        Router → Router
+                    </p>
+                </div>
+
+
+                <div>
+                    <span>LAB 05</span>
+
+                    <h3>
+                        OSPF
+                    </h3>
+
+                    <p>
+                        Multi-Router Network
+                    </p>
+                </div>
+
+
+                <div>
+                    <span>LAB 06</span>
+
+                    <h3>
+                        Enterprise Network
+                    </h3>
+
+                    <p>
+                        Enterprise → ISP → Cloud
+                    </p>
+                </div>
+
+            </div>
+
+        
+<p class="explain">เครื่องมือจำลองที่ใช้ฝึกได้ฟรี: Cisco Packet Tracer, GNS3 และ eNSP สำหรับ Huawei ทำ Lab ตามลำดับ แล้วตรวจผลด้วย <code>ping</code> และคำสั่ง <code>show</code> / <code>display</code> ทุกครั้ง</p>
+<table>
+<tr><th>Lab</th><th>เป้าหมาย</th><th>ตรวจผลด้วย</th></tr>
+<tr><td>01</td><td>ตั้ง IP ให้ PC สองเครื่องคุยกันผ่าน Switch</td><td>ping</td></tr>
+<tr><td>02</td><td>แยก VLAN 10/20 และทำ Trunk ให้ผ่านหลาย Switch</td><td>show vlan brief, show interfaces trunk</td></tr>
+<tr><td>03</td><td>ให้ VLAN 10 คุยกับ VLAN 20 ผ่าน Sub-interface</td><td>ping ข้าม VLAN</td></tr>
+<tr><td>04</td><td>ตั้ง Static Route ทั้งขาไปและขากลับ</td><td>show ip route, traceroute</td></tr>
+<tr><td>05</td><td>ให้ Router หลายตัวเรียนรู้ Route กันเองด้วย OSPF</td><td>show ip ospf neighbor (ต้องเป็น Full)</td></tr>
+<tr><td>06</td><td>รวมทุกอย่าง: Enterprise + Default Route ไป ISP</td><td>ping ไปปลายทางฝั่ง Cloud</td></tr>
+</table>
+
+        <h3 class="sub">ขั้นตอนทำ Lab ทีละขั้น</h3>
+<p class="explain">คำสั่งเป็นแบบ Cisco ใช้ได้กับ Packet Tracer / GNS3 (ชื่อ Interface อาจต่างกันตามรุ่น) กดที่หัวข้อเพื่อเปิดดูรายละเอียดแต่ละ Lab</p>
+<details class="lab"><summary>LAB 01 · Basic Network (PC → Switch → PC)</summary>
+<p><b>เป้าหมาย:</b> ให้ PC สองเครื่องใน Subnet เดียวกันคุยกันผ่าน Switch และเห็นว่า Switch เรียน MAC เอง</p>
+<p><b>Topology:</b> PC1 และ PC2 ต่อ Switch ตัวเดียว (ไม่ต้องตั้งค่า Switch)</p>
+<p><b>แผน IP:</b> PC1 = 192.168.10.10/24, PC2 = 192.168.10.20/24</p>
+<div class="command-box"><h3>ตั้งค่าบน PC (Windows)</h3>
+<pre>
+ตั้ง IP ที่ Network Adapter หรือใน Packet Tracer ที่แท็บ Config
+ping 192.168.10.20
+</pre></div>
+<p><b>ตรวจผล:</b> ping ได้รับ Reply (ครั้งแรกอาจ Timeout 1 ครั้งเพราะต้องทำ ARP ก่อน) บน Switch สั่ง <code>show mac address-table</code> จะเห็น MAC ของทั้งสองเครื่องและพอร์ตที่เรียนมา และบน PC สั่ง <code>arp -a</code> เพื่อดู ARP Table</p>
+</details>
+<details class="lab"><summary>LAB 02 · VLAN + Trunk</summary>
+<p><b>เป้าหมาย:</b> แยก VLAN 10 / VLAN 20 และให้ VLAN เดียวกันคุยกันข้าม Switch สองตัวผ่าน Trunk</p>
+<p><b>Topology:</b> SW1 และ SW2 ต่อกันด้วยพอร์ต Gi0/24 (Trunk) แต่ละ Switch มี PC อย่างละ 2 เครื่อง (PC1, PC3 ใน VLAN 10; PC2, PC4 ใน VLAN 20)</p>
+<p><b>แผน IP:</b> VLAN 10 = 192.168.10.0/24 (PC1 .11, PC3 .13), VLAN 20 = 192.168.20.0/24 (PC2 .12, PC4 .14)</p>
+<div class="command-box"><h3>ตั้งค่า SW1 และ SW2 (เหมือนกัน เปลี่ยนพอร์ตตาม PC ที่ต่อ)</h3>
+<pre>
+vlan 10
+ name IT
+vlan 20
+ name HR
+interface gigabitEthernet 0/1
+ switchport mode access
+ switchport access vlan 10
+interface gigabitEthernet 0/2
+ switchport mode access
+ switchport access vlan 20
+interface gigabitEthernet 0/24
+ switchport mode trunk
+ switchport trunk allowed vlan 10,20
+</pre></div>
+<p><b>ตรวจผล:</b> PC1 ping PC3 <b>ได้</b> (VLAN เดียวกัน ข้าม Trunk) แต่ PC1 ping PC2 <b>ไม่ได้</b> เพราะต่าง VLAN และยังไม่มี Router ใช้ <code>show vlan brief</code> ดูสมาชิกพอร์ต และ <code>show interfaces trunk</code> ดู VLAN ที่ผ่าน Trunk</p>
+</details>
+<details class="lab"><summary>LAB 03 · Inter-VLAN Routing (Router-on-a-Stick)</summary>
+<p><b>เป้าหมาย:</b> ให้ VLAN 10 และ VLAN 20 คุยกันได้ผ่าน Router ตัวเดียวที่ต่อ Trunk</p>
+<p><b>Topology:</b> ต่อยอด Lab 02: เพิ่ม Router ต่อกับ Switch ผ่านพอร์ต Trunk (Switch Gi0/23 ↔ Router Gi0/0)</p>
+<p><b>แผน IP:</b> Gateway VLAN 10 = 192.168.10.1, Gateway VLAN 20 = 192.168.20.1 (ตั้ง Default Gateway ของ PC ให้ตรง)</p>
+<div class="command-box"><h3>Switch - ตั้งพอร์ตที่ต่อ Router เป็น Trunk</h3>
+<pre>
+interface gigabitEthernet 0/23
+ switchport mode trunk
+ switchport trunk allowed vlan 10,20
+</pre></div><div class="command-box"><h3>Router - Sub-interface</h3>
+<pre>
+interface gigabitEthernet 0/0
+ no shutdown
+interface gigabitEthernet 0/0.10
+ encapsulation dot1Q 10
+ ip address 192.168.10.1 255.255.255.0
+interface gigabitEthernet 0/0.20
+ encapsulation dot1Q 20
+ ip address 192.168.20.1 255.255.255.0
+</pre></div>
+<p><b>ตรวจผล:</b> PC1 ping PC2 ได้แล้ว (ครั้งแรกอาจ Timeout เพราะ ARP) ลอง <code>tracert 192.168.20.12</code> จะเห็น Hop แรกเป็น 192.168.10.1 ถ้าไม่ผ่านให้ตรวจ: Router Gi0/0 ต้อง no shutdown, <code>encapsulation dot1Q</code> ต้องสั่งก่อน ip address และ Trunk ต้อง allow VLAN ครบ</p>
+</details>
+<details class="lab"><summary>LAB 04 · Static Routing (Router → Router)</summary>
+<p><b>เป้าหมาย:</b> ตั้ง Static Route ทั้งขาไปและขากลับ ให้ LAN สองฝั่งคุยกันข้าม Router</p>
+<p><b>Topology:</b> PC1 — R1 — R2 — PC2</p>
+<p><b>แผน IP:</b> LAN1 = 192.168.10.0/24 (R1 Gi0/0 = .1), ลิงก์ R1↔R2 = 10.0.0.0/30 (R1 = .1, R2 = .2), LAN2 = 192.168.20.0/24 (R2 Gi0/0 = .1)</p>
+<div class="command-box"><h3>R1</h3>
+<pre>
+interface gigabitEthernet 0/0
+ ip address 192.168.10.1 255.255.255.0
+ no shutdown
+interface gigabitEthernet 0/1
+ ip address 10.0.0.1 255.255.255.252
+ no shutdown
+ip route 192.168.20.0 255.255.255.0 10.0.0.2
+</pre></div><div class="command-box"><h3>R2</h3>
+<pre>
+interface gigabitEthernet 0/0
+ ip address 192.168.20.1 255.255.255.0
+ no shutdown
+interface gigabitEthernet 0/1
+ ip address 10.0.0.2 255.255.255.252
+ no shutdown
+ip route 192.168.10.0 255.255.255.0 10.0.0.1
+</pre></div>
+<p><b>ตรวจผล:</b> PC1 ping PC2 ได้ และ <code>show ip route</code> จะเห็นแถว <code>S 192.168.20.0/24</code> บน R1 ลองลบ Route ฝั่ง R2 ออก แล้ว ping จะไม่ตอบ (Request timed out) เพราะแพ็กเก็ตไปถึงแต่ไม่มี Route กลับ ทำให้เห็นว่าต้องมีครบทั้งขาไปและขากลับ</p>
+</details>
+<details class="lab"><summary>LAB 05 · OSPF (Multi-Router)</summary>
+<p><b>เป้าหมาย:</b> ให้ Router หลายตัวเรียนรู้ Route กันเองด้วย OSPF แทนการตั้ง Static</p>
+<p><b>Topology:</b> PC1 — R1 — R2 — R3 — PC3</p>
+<p><b>แผน IP:</b> LAN1 = 192.168.10.0/24 (R1), R1↔R2 = 10.0.0.0/30, R2↔R3 = 10.0.0.4/30, LAN3 = 192.168.30.0/24 (R3), Router ID = 1.1.1.1 / 2.2.2.2 / 3.3.3.3</p>
+<div class="command-box"><h3>R1</h3>
+<pre>
+router ospf 1
+ router-id 1.1.1.1
+ network 10.0.0.0 0.0.0.3 area 0
+ network 192.168.10.0 0.0.0.255 area 0
+ passive-interface gigabitEthernet 0/0
+</pre></div><div class="command-box"><h3>R2</h3>
+<pre>
+router ospf 1
+ router-id 2.2.2.2
+ network 10.0.0.0 0.0.0.3 area 0
+ network 10.0.0.4 0.0.0.3 area 0
+</pre></div><div class="command-box"><h3>R3</h3>
+<pre>
+router ospf 1
+ router-id 3.3.3.3
+ network 10.0.0.4 0.0.0.3 area 0
+ network 192.168.30.0 0.0.0.255 area 0
+ passive-interface gigabitEthernet 0/0
+</pre></div>
+<p><b>ตรวจผล:</b> <code>show ip ospf neighbor</code> ต้องเห็นสถานะ Full, <code>show ip route ospf</code> จะมีแถวขึ้นต้นด้วย O และ PC1 ping PC3 ได้ <code>passive-interface</code> ใช้กับพอร์ต LAN เพื่อไม่ส่ง Hello ออกไปหา PC โดยไม่จำเป็น ถ้า Neighbor ไม่ขึ้น ให้ตรวจ Subnet ของลิงก์ และ Area ให้ตรงกัน</p>
+</details>
+<details class="lab"><summary>LAB 06 · Enterprise → ISP → Cloud</summary>
+<p><b>เป้าหมาย:</b> จำลององค์กรที่ใช้ Private IP ออกอินเทอร์เน็ตผ่าน Default Route และ NAT</p>
+<p><b>Topology:</b> PC (LAN) — R-EDGE — R-ISP — Cloud Server</p>
+<p><b>แผน IP:</b> LAN = 192.168.10.0/24 (R-EDGE Gi0/1 = .1), R-EDGE↔ISP = 203.0.113.0/30 (R-EDGE = .2, ISP = .1), Cloud Server = 8.8.8.8/24 (R-ISP Gi0/1 = 8.8.8.1)</p>
+<div class="command-box"><h3>R-EDGE (Default Route + NAT)</h3>
+<pre>
+interface gigabitEthernet 0/1
+ ip address 192.168.10.1 255.255.255.0
+ ip nat inside
+ no shutdown
+interface gigabitEthernet 0/0
+ ip address 203.0.113.2 255.255.255.252
+ ip nat outside
+ no shutdown
+ip route 0.0.0.0 0.0.0.0 203.0.113.1
+access-list 1 permit 192.168.10.0 0.0.0.255
+ip nat inside source list 1 interface gigabitEthernet 0/0 overload
+</pre></div><div class="command-box"><h3>R-ISP</h3>
+<pre>
+interface gigabitEthernet 0/0
+ ip address 203.0.113.1 255.255.255.252
+ no shutdown
+interface gigabitEthernet 0/1
+ ip address 8.8.8.1 255.255.255.0
+ no shutdown
+</pre></div>
+<p><b>ตรวจผล:</b> PC ping 8.8.8.8 ได้ แล้วสั่ง <code>show ip nat translations</code> บน R-EDGE จะเห็นการแปลง Private IP เป็น 203.0.113.2 R-ISP ไม่จำเป็นต้องรู้จัก 192.168.10.0/24 เพราะ NAT แปลงที่อยู่ก่อนส่งออก ส่วน Default Route คือสิ่งที่ทำให้ R-EDGE ส่งทุกอย่างที่ไม่รู้จักไปหา ISP</p>
+</details>
+
+        </section>
+
+
+        <footer>
+
+            NETBOOK © 2026
+            <br>
+            Network Engineer Handbook
+
+        </footer>
+
+    </main>
+
+
+    <script src="js/app.js"></script>
+<script>
+/* แยกเนื้อหาเป็นหน้า: แสดงทีละหมวด */
+(function(){
+var pages=[['home','Dashboard'],['basics','Network Basics'],['protocols','Protocols'],['switching','Switching'],['routing','Routing'],['cisco','Cisco'],['huawei','Huawei'],['console','Console Cable'],['utp','สาย LAN (UTP)'],['fiber','Fiber Optic'],['troubleshooting','Troubleshooting'],['labs','Network Labs']];
+var ids=pages.map(function(x){return x[0]});
+var secs=document.querySelectorAll('main > section');
+// ปุ่มก่อนหน้า / ถัดไป ท้ายแต่ละหน้า
+pages.forEach(function(pg,i){
+  var host=document.getElementById(i===0?'categories':pg[0]); if(!host) return;
+  var d=document.createElement('div'); d.className='pager';
+  var prev=pages[i-1],next=pages[i+1];
+  d.innerHTML=(prev?'<a href="#'+prev[0]+'">← '+prev[1]+'</a>':'<span></span>')+(next?'<a href="#'+next[0]+'">'+next[1]+' →</a>':'<span></span>');
+  host.appendChild(d);
+});
+function show(id){
+  if(ids.indexOf(id)<0) id='home';
+  secs.forEach(function(s){
+    var keep=id==='home'?(s.id==='home'||s.id==='categories'):s.id===id;
+    s.classList.toggle('page-hidden',!keep);
+  });
+  document.querySelectorAll('.sidebar nav a').forEach(function(a){
+    a.classList.toggle('active',a.getAttribute('href')==='#'+id);
+  });
+  window.scrollTo(0,0);
+  var m=document.querySelector('main'); if(m&&m.scrollTo) m.scrollTo(0,0);
+}
+document.addEventListener('click',function(e){
+  var a=e.target.closest&&e.target.closest('a[href^="#"]'); if(!a) return;
+  var id=a.getAttribute('href').slice(1); if(ids.indexOf(id)<0) return;
+  e.preventDefault(); e.stopPropagation();
+  if(location.hash!=='#'+id) history.pushState(null,'','#'+id);
+  show(id);
+},true);
+window.addEventListener('popstate',function(){show(location.hash.slice(1))});
+window.addEventListener('hashchange',function(){show(location.hash.slice(1))});
+window.__showPage=show;
+show(location.hash.slice(1));
+})();
+</script>
+
+
+<script>
+/* ค้นหาเนื้อหาทุกหมวด */
+(function(){
+var inp=document.querySelector('.search input'); if(!inp||!window.__showPage) return;
+var box=document.createElement('div'); box.className='search-results'; box.hidden=true;
+inp.closest('.search').appendChild(box);
+function txt(n){return (n.textContent||'').replace(/\s+/g,' ').trim()}
+var idx=[];
+document.querySelectorAll('main > section[id]').forEach(function(s){
+  var pid=s.id; if(pid==='home'||pid==='categories') return;
+  var pname=txt(s.querySelector('h2')||s);
+  s.querySelectorAll('h2,h3,summary').forEach(function(h){
+    var body='',par=h.closest('article,.command-box,details');
+    if(par&&par!==s) body=txt(par);
+    else{var n=h.nextElementSibling;while(n&&!/^H[23]$/.test(n.tagName)&&body.length<1500){body+=' '+txt(n);n=n.nextElementSibling}}
+    body=body.slice(0,1500);
+    idx.push({el:h,page:pid,pname:pname,title:txt(h),raw:body,body:body.toLowerCase()});
+  });
+});
+function esc(s){return s.replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c]})}
+function rx(s){return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')}
+var cur=[],sel=-1;
+function run(){
+  var q=inp.value.trim(),terms=q.toLowerCase().split(/\s+/).filter(Boolean);
+  if(q.length<2){box.hidden=true;cur=[];return}
+  var res=[];
+  idx.forEach(function(it){
+    var tl=it.title.toLowerCase(),sc=0,ok=true;
+    terms.forEach(function(w){var inT=tl.indexOf(w)>=0,c=it.body.split(w).length-1;if(!inT&&!c)ok=false;sc+=(inT?10:0)+Math.min(c,5)});
+    if(ok) res.push({it:it,sc:sc});
+  });
+  res.sort(function(a,b){return b.sc-a.sc});
+  cur=res.slice(0,8).map(function(r){return r.it}); sel=-1;
+  if(!cur.length){box.innerHTML='<div class="none">ไม่พบผลลัพธ์สำหรับ "'+esc(q)+'"</div>';box.hidden=false;return}
+  var re=new RegExp('('+terms.map(function(w){return rx(esc(w))}).join('|')+')','gi');
+  box.innerHTML=cur.map(function(it,i){
+    var p=it.body.indexOf(terms[0]),a=Math.max(0,(p<0?0:p)-40),sn=it.raw.slice(a,a+130);
+    return '<div class="it" data-i="'+i+'"><b>'+esc(it.title).replace(re,'<mark>$1</mark>')+'</b><small>'+esc(it.pname)+'</small><span>'+(a>0?'…':'')+esc(sn).replace(re,'<mark>$1</mark>')+'…</span></div>';
+  }).join('');
+  box.hidden=false;
+}
+function go(i){
+  var it=cur[i]; if(!it) return;
+  box.hidden=true;
+  if(location.hash!=='#'+it.page) history.pushState(null,'','#'+it.page);
+  window.__showPage(it.page);
+  var d=it.el.closest('details'); if(d) d.open=true;
+  setTimeout(function(){it.el.scrollIntoView({behavior:'smooth',block:'start'});it.el.classList.add('hit');setTimeout(function(){it.el.classList.remove('hit')},2000)},40);
+}
+function mark(){box.querySelectorAll('.it').forEach(function(e,i){e.classList.toggle('on',i===sel)})}
+inp.addEventListener('input',run);
+inp.addEventListener('focus',function(){if(inp.value.trim().length>=2) run()});
+inp.addEventListener('keydown',function(e){
+  if(e.key==='Escape'){box.hidden=true;inp.blur()}
+  else if(e.key==='ArrowDown'){e.preventDefault();sel=Math.min(cur.length-1,sel+1);mark()}
+  else if(e.key==='ArrowUp'){e.preventDefault();sel=Math.max(0,sel-1);mark()}
+  else if(e.key==='Enter'){e.preventDefault();go(sel<0?0:sel)}
+});
+box.addEventListener('click',function(e){var r=e.target.closest('.it');if(r) go(+r.getAttribute('data-i'))});
+document.addEventListener('click',function(e){if(!e.target.closest('.search')) box.hidden=true});
+})();
+</script>
+</body>
+
+</html>
