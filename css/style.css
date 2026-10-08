@@ -424,15 +424,23 @@ main {
 
 code {
 
-    display: block;
-
     background: #07111f;
 
-    padding: 12px;
+    padding: 2px 6px;
 
-    border-radius: 6px;
+    border-radius: 4px;
 
     color: #18d1b5;
+
+    font-size: 0.92em;
+
+}
+
+pre code {
+
+    display: block;
+
+    padding: 12px;
 
 }
 
